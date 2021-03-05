@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -59,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CustomListAdapter(dataModels,getApplicationContext());
 
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ContactModel dataModel= dataModels.get(i);
+                Log.d("ONCLICK", "Element " + dataModel.getName());
+            }
+
+        });
     }
 
     // Start the EditContact activity, with no user datas to load

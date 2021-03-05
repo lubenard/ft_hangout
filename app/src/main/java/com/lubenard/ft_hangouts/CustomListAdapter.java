@@ -1,10 +1,13 @@
 package com.lubenard.ft_hangouts;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +23,7 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         TextView contactName;
         TextView contactPhoneNumber;
         ImageView contactImageView;
+        ImageButton callButton;
     }
 
     public CustomListAdapter(ArrayList<ContactModel> data, Context context) {
@@ -35,10 +39,6 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         Object object= getItem(position);
         ContactModel dataModel=(ContactModel) object;
 
-        switch (v.getId())
-        {
-            // Action
-        }
     }
 
     private int lastPosition = -1;
@@ -58,6 +58,7 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
             convertView = inflater.inflate(R.layout.custom_contact_list_element, parent, false);
             viewHolder.contactName = (TextView) convertView.findViewById(R.id.custom_view_contactName);
             viewHolder.contactPhoneNumber = (TextView) convertView.findViewById(R.id.custom_view_contactPhoneNumber);
+            viewHolder.callButton = convertView.findViewById(R.id.call_contact);
 
             result = convertView;
             convertView.setTag(viewHolder);
@@ -72,6 +73,12 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
 */
         viewHolder.contactName.setText(dataModel.getName());
         viewHolder.contactPhoneNumber.setText(dataModel.getPhoneNumber());
+        viewHolder.callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
+            }
+        });
         /*viewHolder.txtVersion.setText(dataModel.getVersion_number());
         viewHolder.info.setOnClickListener(this);
         viewHolder.info.setTag(position);*/
