@@ -44,15 +44,16 @@ public class EditContact extends AppCompatActivity {
         if (id == R.id.action_validate) {
             // TODO: see if with API we can insert contact into system contacts
             // For now, just register into own contacts
-            EditText name = findViewById(R.id.editTextTextPersonName);
-            EditText phoneNumber = findViewById(R.id.editTextPhone);
-            EditText email = findViewById(R.id.editTextTextEmailAddress);
-            EditText address = findViewById(R.id.editTextTextPostalAddress);
-            EditText birthday = findViewById(R.id.editTextBirthday);
+            String name = ((EditText)findViewById(R.id.editTextTextPersonName)).getText().toString();
+            String phoneNumber = ((EditText)findViewById(R.id.editTextPhone)).getText().toString();
+            String email = ((EditText)findViewById(R.id.editTextTextEmailAddress)).getText().toString();
+            String address = ((EditText)findViewById(R.id.editTextTextPostalAddress)).getText().toString();
+            String birthday = ((EditText)findViewById(R.id.editTextBirthday)).getText().toString();
 
             if (contactId == -1)
-                dbManager.createNewContact(name.getText().toString(), phoneNumber.getText().toString(), email.getText().toString(),address.getText().toString(), birthday.getText().toString());
+                dbManager.createNewContact(name, phoneNumber, email, address, birthday);
 
+            finish();
             return true;
         }
 

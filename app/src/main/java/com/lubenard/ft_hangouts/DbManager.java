@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 /**
  * Handle the DB used to save datas.
  * Theses datas are sent to Musk in order to build Skynet.
@@ -18,19 +21,21 @@ public class DbManager extends SQLiteOpenHelper {
     static final String dbName = "dataDB";
 
     // Contact table
-    static final String contactsTable = "contacts";
-    static final String contactsTableId = "id";
-    static final String contactsTableName = "contactName";
-    static final String contactsTablePhoneNumber = "contactPhoneNumber";
-    static final String contactsTableEmail = "contactEmail";
-    static final String contactsTableAddress = "contactAddress";
-    static final String contactsTableBirthdate = "contactBirthdate";
+    private static final String contactsTable = "contacts";
+    private static final String contactsTableId = "id";
+    private static final String contactsTableName = "contactName";
+    private static final String contactsTablePhoneNumber = "contactPhoneNumber";
+    private static final String contactsTableEmail = "contactEmail";
+    private static final String contactsTableAddress = "contactAddress";
+    private static final String contactsTableBirthdate = "contactBirthdate";
 
     private SQLiteDatabase writableDB;
+    private SQLiteDatabase readableDB;
 
     public DbManager(Context context) {
         super(context, dbName , null,1);
-        writableDB = this.getWritableDatabase();
+        this.writableDB = this.getWritableDatabase();
+        this.readableDB = this.getReadableDatabase();
     }
 
     /**
@@ -60,6 +65,24 @@ public class DbManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    /**
+     * Get the app datas for a specific date
+     * @return The datas fetched from the DB
+     */
+    public LinkedHashMap<Integer, ContactModel> getAllAppsForMainList() {
+        LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
+
+        //String [] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate};
+        Cursor cursor = readableDB.rawQuery("SELECT * from " + contactsTable, null);
+
+        while (cursor.moveToNext()) {
+            contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)), null));
+            Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + " and value " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
+        }
+        cursor.close();
+        return contactDatas;
     }
 
     /**

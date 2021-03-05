@@ -16,8 +16,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ArrayList<ContactModel> dataModels;
+    private DbManager dbManager;
+    private CustomListAdapter adapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,31 +41,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<ContactModel> dataModels;
-        ListView listView;
-        CustomListAdapter adapter;
-
         listView = findViewById(R.id.main_list);
 
         dataModels = new ArrayList<>();
 
-        dataModels.add(new ContactModel("Toto", "Android 1.0", null));
-        dataModels.add(new ContactModel("Luc", "Android 1.1", null));
-        dataModels.add(new ContactModel("Cupcake", "Android 1.5", null));
-        dataModels.add(new ContactModel("My best friend","Android 1.6",null));
-        dataModels.add(new ContactModel("Carl", "Android 2.0", null));
-        dataModels.add(new ContactModel("David", "Android 2.2", null));
-        dataModels.add(new ContactModel("Amber", "Android 2.3",null));
-        dataModels.add(new ContactModel("Clara","Android 3.0", null));
-        dataModels.add(new ContactModel("Jeremy", "Android 4.0", null));
-        dataModels.add(new ContactModel("Jennifer", "Android 4.2", null));
-        dataModels.add(new ContactModel("Karl", "Android 4.4", null));
-        dataModels.add(new ContactModel("Boss","Android 5.0",null));
-        dataModels.add(new ContactModel("Marie", "Android 6.0", null));
+        dbManager = new DbManager(this);
 
-        adapter = new CustomListAdapter(dataModels,getApplicationContext());
-
-        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -68,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    private void updateContactList() {
+        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllAppsForMainList();
+        for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
+            dataModels.add(oneElemDatas.getValue());
+        }
+        adapter = new CustomListAdapter(dataModels, getApplicationContext());
+        listView.setAdapter(adapter);
     }
 
     // Start the EditContact activity, with no user datas to load
@@ -97,5 +93,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dataModels.clear();
+        updateContactList();
     }
 }
