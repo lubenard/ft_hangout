@@ -3,14 +3,20 @@ package com.lubenard.ft_hangouts;
 import android.media.Image;
 
 public class ContactModel {
-    String name;
-    String phoneNumber;
-    Image contactImage;
+    private int id;
+    private String name;
+    private String phoneNumber;
+    private Image contactImage;
 
-    public ContactModel(String name, String phoneNumber, Image contactImage) {
+    public ContactModel(int id, String name, String phoneNumber, Image contactImage) {
+        this.id = id;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.contactImage = contactImage;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

@@ -52,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ContactModel dataModel= dataModels.get(i);
                 Log.d("ONCLICK", "Element " + dataModel.getName());
+                Intent intent = new Intent(getApplicationContext(), ContactDetails.class);
+                intent.putExtra("contactId", dataModel.getId());
+                startActivity(intent);
             }
 
         });

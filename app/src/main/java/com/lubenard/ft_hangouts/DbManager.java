@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -67,6 +70,27 @@ public class DbManager extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<String> getContactDetail(int id) {
+
+        ArrayList<String> contactDatas = new ArrayList<>();
+
+        String[] columns = new String[]{contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate};
+        Cursor cursor = readableDB.query(contactsTable, columns,contactsTableId + "=?",
+                new String[]{String.valueOf(id)}, null, null, null);
+
+        cursor.moveToFirst();
+        //Log.d(TAG, "cursor = " + cursor.getString(cursor.getColumnIndex(contactsTableName)));
+        contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableName)));
+        contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
+        contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableEmail)));
+        contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableAddress)));
+        contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableBirthdate)));
+        Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + ", " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
+        Log.d(TAG, "Columns array is = " + Arrays.toString(cursor.getColumnNames()));
+        cursor.close();
+        return contactDatas;
+    }
+
     /**
      * Get the app datas for a specific date
      * @return The datas fetched from the DB
@@ -74,12 +98,13 @@ public class DbManager extends SQLiteOpenHelper {
     public LinkedHashMap<Integer, ContactModel> getAllAppsForMainList() {
         LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
 
-        //String [] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate};
-        Cursor cursor = readableDB.rawQuery("SELECT * from " + contactsTable, null);
+        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate};
+        Cursor cursor = readableDB.query(contactsTable,  columns, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)), null));
-            Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + " and value " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
+            contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),
+                    cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)), null));
+            //Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + " and value " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
         }
         cursor.close();
         return contactDatas;

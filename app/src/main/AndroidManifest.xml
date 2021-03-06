@@ -20,5 +20,8 @@
         <activity android:name=".EditContact"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity android:name=".ContactDetails"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 </manifest>
