@@ -9,6 +9,8 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class EditContact extends AppCompatActivity {
 
     int contactId;
@@ -26,9 +28,16 @@ public class EditContact extends AppCompatActivity {
 
         if (contactId == -1)
             setTitle(R.string.app_create_contact_name);
-        else
+        else {
             setTitle(R.string.app_edit_contact_name);
-
+            ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
+            // Load datas into the fields
+            ((EditText)findViewById(R.id.editTextTextPersonName)).setText(contactDetails.get(0));
+            ((EditText)findViewById(R.id.editTextPhone)).setText(contactDetails.get(1));
+            ((EditText)findViewById(R.id.editTextTextEmailAddress)).setText(contactDetails.get(2));
+            ((EditText)findViewById(R.id.editTextTextPostalAddress)).setText(contactDetails.get(3));
+            ((EditText)findViewById(R.id.editTextBirthday)).setText(contactDetails.get(4));
+        }
     }
 
     @Override
@@ -52,6 +61,8 @@ public class EditContact extends AppCompatActivity {
 
             if (contactId == -1)
                 dbManager.createNewContact(name, phoneNumber, email, address, birthday);
+            else
+                dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday);
 
             finish();
             return true;

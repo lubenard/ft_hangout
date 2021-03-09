@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateContactList() {
-        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllAppsForMainList();
+        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList();
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
         }

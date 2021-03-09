@@ -92,13 +92,13 @@ public class DbManager extends SQLiteOpenHelper {
     }
 
     /**
-     * Get the app datas for a specific date
-     * @return The datas fetched from the DB
+     * Get the contact list for a the main List
+     * @return The datas fetched from the DB as a LinkedHashMap
      */
-    public LinkedHashMap<Integer, ContactModel> getAllAppsForMainList() {
+    public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList() {
         LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
 
-        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate};
+        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber};
         Cursor cursor = readableDB.query(contactsTable,  columns, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
@@ -135,20 +135,30 @@ public class DbManager extends SQLiteOpenHelper {
     /**
      * Update contact datas:
      * Example: The contact toto already exist, but the user did not gave the right email
-     * @param newScreenTime new screen time
-     * @param date date to which you want to get the datas
+     * @param name new contact name
+     * @param phoneNumber new Phone number
+     * @param email email contact address
+     * @param address postal contact address
+     * @param birthday contact birthday
      */
-    public static void updateContact(int newScreenTime, String date) {
-        /*ContentValues cv = new ContentValues();
-        cv.put(screenTimeTableScreenTime, newScreenTime);
+    public void updateContact(int id, String name, String phoneNumber, String email, String address, String birthday) {
+        ContentValues cv = new ContentValues();
+        cv.put(contactsTableName, name);
+        cv.put(contactsTablePhoneNumber, phoneNumber);
+        cv.put(contactsTableEmail, email);
+        cv.put(contactsTableAddress, address);
+        cv.put(contactsTableBirthdate, birthday);
 
-        Log.d(TAG, "updateScreenTime: update with new value (time = " + newScreenTime + ") for date = " + date);
-        int u = writableDB.update(screenTimeTable, cv, screenTimeTableDate + "=?", new String []{date});
+        int u = writableDB.update(contactsTable, cv, contactsTableId + "=?", new String[]{String.valueOf(id)});
         if (u == 0) {
-            Log.d(TAG, "updateScreenTime: update does not seems to work, insert data: (time = " + newScreenTime + ") for date = " + date);
-            cv.put(screenTimeTableDate, date);
-            writableDB.insertWithOnConflict(screenTimeTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
-        }*/
+            Log.d(TAG, "updateContact: update does not seems to work, insert data: (for id=" + id);
+            cv.put(contactsTableName, name);
+            cv.put(contactsTablePhoneNumber, phoneNumber);
+            cv.put(contactsTableEmail, email);
+            cv.put(contactsTableAddress, address);
+            cv.put(contactsTableBirthdate, birthday);
+            writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+        }
     }
 
     /**
