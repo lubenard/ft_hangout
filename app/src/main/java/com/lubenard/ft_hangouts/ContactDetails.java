@@ -1,5 +1,7 @@
 package com.lubenard.ft_hangouts;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,13 +41,25 @@ public class ContactDetails extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_edit_contact) {
-            Intent intent = new Intent(getApplicationContext(), EditContact.class);
-            intent.putExtra("contactId", contactId);
-            startActivity(intent);
-            return true;
+        switch (id) {
+            case R.id.action_edit_contact:
+                Intent intent = new Intent(getApplicationContext(), EditContact.class);
+                intent.putExtra("contactId", contactId);
+                startActivity(intent);
+                break;
+            case R.id.action_delete_contact:
+                new AlertDialog.Builder(this).setTitle(R.string.alertdialog_delete_contact_title)
+                        .setMessage(R.string.alertdialog_delete_contact_body)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbManager.deleteContact(contactId);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

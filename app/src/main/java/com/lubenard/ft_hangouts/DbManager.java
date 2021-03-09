@@ -92,6 +92,15 @@ public class DbManager extends SQLiteOpenHelper {
     }
 
     /**
+     * Delete a contact
+     * @param contactId the id of the contact we want to delete
+     */
+    public void deleteContact(int contactId)
+    {
+        writableDB.delete(contactsTable,contactsTableId + "=?", new String[]{String.valueOf(contactId)});
+    }
+
+    /**
      * Get the contact list for a the main List
      * @return The datas fetched from the DB as a LinkedHashMap
      */
