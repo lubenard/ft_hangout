@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_edit_contact"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/action_settings"
+        android:icon="@drawable/baseline_create_24"
+        android:title="@string/action_edit"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_delete_contact"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:title="@string/action_settings"
+        android:icon="@drawable/baseline_delete_forever_24"
+        android:title="@string/action_delete"
         app:showAsAction="always" />
 </menu>

@@ -5,7 +5,7 @@
     tools:context="com.lubenard.ft_hangouts.EditContact">
     <item
         android:id="@+id/action_validate"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/baseline_save_24"
         android:title="@string/action_settings"
         app:showAsAction="always" />
 </menu>

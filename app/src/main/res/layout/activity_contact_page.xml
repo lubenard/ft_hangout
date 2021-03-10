@@ -12,6 +12,27 @@
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_menu_help" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Call" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Message" />
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/contact_detail_name"
         android:layout_width="match_parent"

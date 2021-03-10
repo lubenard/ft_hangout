@@ -3,8 +3,22 @@
     <string name="action_settings">Settings</string>
 
     <string name="app_title">My contacts</string>
-    <string name="app_create_contact_name">Create new contact</string>
+    <string name="app_create_contact_name">Create a new contact</string>
     <string name="app_edit_contact_name">Edit this contact</string>
     <string name="alertdialog_delete_contact_title">Do you want to delete this contact ?</string>
     <string name="alertdialog_delete_contact_body">This operation is irreversible, and cannot be undone. Are you sure you want to proceed ?</string>
+
+    <string name="settings_ui_theme_clear">Clear</string>
+    <string name="settings_ui_theme_dark">Dark</string>
+    <string name="settings_ui_theme_black">Black</string>
+    <string name="settings_ui_theme_battery_saver">Battery saver</string>
+    <string name="settings_ui_system">System</string>
+    <string name="ui_language_title">Language</string>
+    <string name="ui_theme_title">Theme</string>
+    <string name="settings_other_dev_title">Dev settings</string>
+    <string name="settings_other_dev_description">Test functionality easier</string>
+    <string name="settings_other_feedback_title">Feedback the app</string>
+    <string name="settings_other_feedback_description">Feel free to send a mail !</string>
+    <string name="action_edit">edit this contact</string>
+    <string name="action_delete">delete this contact</string>
 </resources>

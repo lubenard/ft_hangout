@@ -92,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //Launch settings page
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new SettingsFragment(), null)
+                    .addToBackStack(null).commit();
             return true;
         }
 

@@ -7,10 +7,19 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_help" />
+        android:layout_marginTop="30dp"
+        app:srcCompat="@drawable/baseline_add_a_photo_24" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Name" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -18,34 +27,80 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:hint="Marie" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Phone number" />
 
     <EditText
         android:id="@+id/editTextPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:hint="+33 6 01 02 03 04"
         android:inputType="phone" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Email" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="example@email.com"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
         android:inputType="textEmailAddress" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Address" />
 
     <EditText
         android:id="@+id/editTextTextPostalAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="100 street of hapiness"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
         android:inputType="textPostalAddress" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Birthday" />
 
     <EditText
         android:id="@+id/editTextBirthday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="01/17/1000"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
         android:inputType="date" />
 
 </LinearLayout>

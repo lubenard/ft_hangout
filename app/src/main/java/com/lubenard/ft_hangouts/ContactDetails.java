@@ -74,6 +74,13 @@ public class ContactDetails extends AppCompatActivity {
             TextView address = findViewById(R.id.contact_detail_address);
             TextView birthday = findViewById(R.id.contact_detail_birthday);
 
+            // If the contact has a name, show it as Activity title.
+            // Else, show the phoneNumber
+            if (contactDetails.get(0) != null)
+                setTitle(contactDetails.get(0));
+            else
+                setTitle(contactDetails.get(1));
+
             name.setText(contactDetails.get(0));
             phoneNumber.setText(contactDetails.get(1));
             email.setText(contactDetails.get(2));
