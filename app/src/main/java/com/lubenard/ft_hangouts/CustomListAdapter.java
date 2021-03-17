@@ -21,9 +21,10 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
     // View lookup cache
     private static class ViewHolder {
         TextView contactName;
-        TextView contactPhoneNumber;
+        TextView contactPhoneNumberEmail;
         ImageView contactImageView;
         ImageButton callButton;
+        ImageButton messageButton;
     }
 
     public CustomListAdapter(ArrayList<ContactModel> data, Context context) {
@@ -37,8 +38,7 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
 
         int position=(Integer) v.getTag();
         Object object= getItem(position);
-        ContactModel dataModel=(ContactModel) object;
-
+        ContactModel dataModel = (ContactModel) object;
     }
 
     private int lastPosition = -1;
@@ -57,8 +57,9 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.custom_contact_list_element, parent, false);
             viewHolder.contactName = (TextView) convertView.findViewById(R.id.custom_view_contactName);
-            viewHolder.contactPhoneNumber = (TextView) convertView.findViewById(R.id.custom_view_contactPhoneNumber);
+            viewHolder.contactPhoneNumberEmail = (TextView) convertView.findViewById(R.id.custom_view_contactPhoneNumber);
             viewHolder.callButton = convertView.findViewById(R.id.call_contact);
+            viewHolder.messageButton = convertView.findViewById(R.id.message_contact);
 
             result = convertView;
             convertView.setTag(viewHolder);
@@ -69,16 +70,35 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
 
         /*Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
         result.startAnimation(animation);
-        lastPosition = position;
-*/
+        lastPosition = position;*/
+
         viewHolder.contactName.setText(dataModel.getName());
-        viewHolder.contactPhoneNumber.setText(dataModel.getPhoneNumber());
+
+        // If no phoneNumber is supplied, print the email, else show a text saying the contact is empty
+        if (!dataModel.getPhoneNumber().isEmpty())
+            viewHolder.contactPhoneNumberEmail.setText(dataModel.getPhoneNumber());
+        else if (!dataModel.getEmail().isEmpty())
+            viewHolder.contactPhoneNumberEmail.setText(dataModel.getEmail());
+        else
+            viewHolder.contactPhoneNumberEmail.setText(getContext().getString(R.string.no_info_provided));
+
         viewHolder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
             }
         });
+
+        viewHolder.messageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
+            }
+        });
+
+        viewHolder.contactName.setSelected(true);
+        viewHolder.contactPhoneNumberEmail.setSelected(true);
+
         /*viewHolder.txtVersion.setText(dataModel.getVersion_number());
         viewHolder.info.setOnClickListener(this);
         viewHolder.info.setTag(position);*/

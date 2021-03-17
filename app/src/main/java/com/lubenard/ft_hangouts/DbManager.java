@@ -108,12 +108,13 @@ public class DbManager extends SQLiteOpenHelper {
     public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList() {
         LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
 
-        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber};
+        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail};
         Cursor cursor = readableDB.query(contactsTable,  columns, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
             contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),
-                    cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)), null));
+                    cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)),
+                    cursor.getString(cursor.getColumnIndex(contactsTableEmail)),  null));
             //Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + " and value " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
         }
         cursor.close();

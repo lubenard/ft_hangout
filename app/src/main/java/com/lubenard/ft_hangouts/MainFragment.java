@@ -94,9 +94,13 @@ public class MainFragment extends Fragment {
 
     // Start the EditContact activity, with no user datas to load
     private void createNewContact() {
-        Intent intent = new Intent(getContext(), EditContact.class);
-        intent.putExtra("contactId", -1);
-        startActivity(intent);
+        EditContact fragment = new EditContact();
+        Bundle args = new Bundle();
+        args.putInt("contactId", -1);
+        fragment.setArguments(args);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(android.R.id.content, fragment, null)
+                .addToBackStack(null).commit();
     }
 
     @Override

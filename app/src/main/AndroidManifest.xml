@@ -20,11 +20,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditContact"
-            android:parentActivityName=".MainActivity">
-        </activity>
-        <activity android:name=".ContactDetails"
-            android:parentActivityName=".MainActivity">
-        </activity>
     </application>
 </manifest>

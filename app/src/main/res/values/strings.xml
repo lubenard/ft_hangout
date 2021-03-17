@@ -21,4 +21,5 @@
     <string name="action_delete">Delete this contact</string>
     <string name="lastPause">Last time this app was put in pause was :</string>
     <string name="error_bad_id">Error: bad id. Please try again.</string>
+    <string name="no_info_provided">(no info provided)</string>
 </resources>

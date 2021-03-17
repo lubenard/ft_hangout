@@ -79,7 +79,7 @@ public class EditContact extends Fragment {
                     else
                         dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday);
 
-                    //finish();
+                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                     return true;
                 default:
                     return false;

@@ -8,14 +8,13 @@
     <ImageView
         android:id="@+id/custom_view_contactImage"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/black"
         app:srcCompat="@android:drawable/ic_menu_help" />
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -24,7 +23,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Contact name" />
+            android:text="Contact_name"
+            android:ellipsize="marquee"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/custom_view_contactPhoneNumber"
@@ -32,23 +33,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="12dp"
-            android:text="Phone number" />
+            android:ellipsize="marquee"
+            android:text="Phone_number"
+            android:singleLine="true"/>
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/call_contact"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/baseline_call_black_18"/>
+        app:srcCompat="@drawable/baseline_call_black_24"/>
 
     <ImageButton
         android:id="@+id/message_contact"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/baseline_chat_black_18" />
-
+        app:srcCompat="@drawable/baseline_chat_black_24" />
 </LinearLayout>
