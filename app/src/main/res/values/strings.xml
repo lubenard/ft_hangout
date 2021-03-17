@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ft_hangouts</string>
-    <string name="action_settings">Settings</string>
 
+    <string name="action_settings">Settings</string>
     <string name="app_title">My contacts</string>
     <string name="app_create_contact_name">Create a new contact</string>
     <string name="app_edit_contact_name">Edit this contact</string>
@@ -15,10 +15,10 @@
     <string name="settings_ui_system">System</string>
     <string name="ui_language_title">Language</string>
     <string name="ui_theme_title">Theme</string>
-    <string name="settings_other_dev_title">Dev settings</string>
-    <string name="settings_other_dev_description">Test functionality easier</string>
     <string name="settings_other_feedback_title">Feedback the app</string>
     <string name="settings_other_feedback_description">Feel free to send a mail !</string>
-    <string name="action_edit">edit this contact</string>
-    <string name="action_delete">delete this contact</string>
+    <string name="action_edit">Edit this contact</string>
+    <string name="action_delete">Delete this contact</string>
+    <string name="lastPause">Last time this app was put in pause was :</string>
+    <string name="error_bad_id">Error: bad id. Please try again.</string>
 </resources>

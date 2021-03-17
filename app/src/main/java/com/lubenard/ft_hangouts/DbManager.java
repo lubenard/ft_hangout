@@ -97,7 +97,8 @@ public class DbManager extends SQLiteOpenHelper {
      */
     public void deleteContact(int contactId)
     {
-        writableDB.delete(contactsTable,contactsTableId + "=?", new String[]{String.valueOf(contactId)});
+        if (contactId > 0)
+            writableDB.delete(contactsTable,contactsTableId + "=?", new String[]{String.valueOf(contactId)});
     }
 
     /**

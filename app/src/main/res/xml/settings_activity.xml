@@ -29,13 +29,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:key="cat_tweaks"
+        app:title="TWEAKS">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="tweaks_integrate_system_contacts"
+            android:title="Integrate system contacts" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="cat_other"
         app:title="OTHER">
-
-        <Preference
-            app:key="other_dev_settings"
-            app:title="@string/settings_other_dev_title"
-            app:summary="@string/settings_other_dev_description"/>
 
         <Preference
             app:key="other_feedback"

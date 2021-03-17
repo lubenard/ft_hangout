@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -82,7 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                         "mailto","lubenard@student.42.fr", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Digital Wellbeing");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contact App");
                 emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
                 startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 return true;
