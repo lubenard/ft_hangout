@@ -7,9 +7,12 @@
 
     <ImageView
         android:id="@+id/custom_view_contactImage"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/contact_icon_wrapper"
         app:srcCompat="@android:drawable/ic_menu_help" />
 
     <LinearLayout
@@ -22,8 +25,9 @@
             android:id="@+id/custom_view_contactName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginTop="10dp"
             android:text="Contact_name"
+            android:layout_marginLeft="10dp"
             android:ellipsize="marquee"
             android:singleLine="true"/>
 
@@ -31,8 +35,8 @@
             android:id="@+id/custom_view_contactPhoneNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginTop="12dp"
+            android:layout_marginLeft="10dp"
             android:ellipsize="marquee"
             android:text="Phone_number"
             android:singleLine="true"/>
@@ -43,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_marginRight="0dp"
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/baseline_call_black_24"/>
 

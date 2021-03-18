@@ -92,7 +92,7 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         viewHolder.messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
+                Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
             }
         });
 

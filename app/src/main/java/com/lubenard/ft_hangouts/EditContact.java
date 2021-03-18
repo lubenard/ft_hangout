@@ -1,22 +1,27 @@
 package com.lubenard.ft_hangouts;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.lubenard.ft_hangouts.Utils.Utils;
+
+import java.io.File;
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 public class EditContact extends Fragment {
 
@@ -24,6 +29,8 @@ public class EditContact extends Fragment {
     private DbManager dbManager;
     private View view;
     private Toolbar toolbar;
+    private ImageButton imagePicker;
+    private String iconImage = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +49,7 @@ public class EditContact extends Fragment {
         contactId = bundle.getInt("contactId", -1);
 
         toolbar = view.findViewById(R.id.edit_contact_toolbar);
+        imagePicker = view.findViewById(R.id.imagePicker);
 
         if (contactId == -1)
             toolbar.setTitle(R.string.app_create_contact_name);
@@ -75,7 +83,7 @@ public class EditContact extends Fragment {
                     String birthday = ((EditText)view.findViewById(R.id.editTextBirthday)).getText().toString();
 
                     if (contactId == -1)
-                        dbManager.createNewContact(name, phoneNumber, email, address, birthday);
+                        dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage);
                     else
                         dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday);
 
@@ -85,5 +93,47 @@ public class EditContact extends Fragment {
                     return false;
             }
         });
+
+        imagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                String pickTitle = "Select or take a new Picture";
+                Intent chooserIntent = Intent.createChooser(intent, pickTitle);
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePhotoIntent });
+                startActivityForResult(Intent.createChooser(chooserIntent,"Select Picture"), 1);
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
+
+            String filename;
+
+            if (contactId > 0)
+                filename = "/" + contactId;
+            else
+                filename = "/image.jpg";
+
+            Log.d("Activity", "Result is okay, nice");
+            Uri selectedImageUri = data.getData();
+            Log.d("Activity", "is null ? " + data.getData());
+            Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
+            Log.d("Activity", "file dir = " + getContext().getFilesDir().getAbsolutePath() + filename);
+            File file = new File(getContext().getFilesDir().getAbsolutePath() + filename);
+
+            if(file.exists())
+                Log.d("Activity", "the file exist");
+            else
+                Log.d("Activity", "the file does not exist");
+
+            iconImage = getContext().getFilesDir().getAbsolutePath() + filename;
+            imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imagePicker.setImageDrawable(Drawable.createFromPath(getContext().getFilesDir().getAbsolutePath() + filename));
+        }
     }
 }

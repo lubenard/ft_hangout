@@ -2,11 +2,14 @@ package com.lubenard.ft_hangouts;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,6 +89,7 @@ public class ContactDetails extends Fragment {
             TextView email = view.findViewById(R.id.contact_detail_email);
             TextView address = view.findViewById(R.id.contact_detail_address);
             TextView birthday = view.findViewById(R.id.contact_detail_birthday);
+            ImageView icon = view.findViewById(R.id.contact_detail_icon);
 
             // If the contact has a name, show it as Activity title.
             // Else, show the phoneNumber
@@ -99,6 +103,8 @@ public class ContactDetails extends Fragment {
             email.setText(contactDetails.get(2));
             address.setText(contactDetails.get(3));
             birthday.setText(contactDetails.get(4));
+            icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            icon.setImageDrawable(Drawable.createFromPath(contactDetails.get(5)));
         }
         else {
             // trigger error, show toast and exit

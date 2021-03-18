@@ -18,15 +18,26 @@
         app:menu="@menu/menu_contact_details"
         app:titleTextColor="@color/white"/>
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_help" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        app:cardCornerRadius="60dp">
+
+        <ImageView
+            android:id="@+id/contact_detail_icon"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            app:srcCompat="@android:drawable/ic_menu_help" />
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <Button
@@ -46,33 +57,88 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Name:" />
+
+    <TextView
         android:id="@+id/contact_detail_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contact Name" />
+        android:textSize="25dp"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:text="Contact_Name" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Phone number:" />
 
     <TextView
         android:id="@+id/contact_detail_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contact phone number" />
+        android:textSize="25dp"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:text="Contact_phone_number" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Email:" />
 
     <TextView
         android:id="@+id/contact_detail_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contact email" />
+        android:textSize="25dp"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:text="Contact_email" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Address:" />
 
     <TextView
         android:id="@+id/contact_detail_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contact adress" />
+        android:textSize="25dp"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:text="Contact_address" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textSize="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Birthday:" />
 
     <TextView
         android:id="@+id/contact_detail_birthday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contact birthdate" />
+        android:textSize="25dp"
+        android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
+        android:text="Contact_birthday" />
 
 </LinearLayout>

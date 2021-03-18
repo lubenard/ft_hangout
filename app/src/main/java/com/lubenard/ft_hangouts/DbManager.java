@@ -31,6 +31,7 @@ public class DbManager extends SQLiteOpenHelper {
     private static final String contactsTableEmail = "contactEmail";
     private static final String contactsTableAddress = "contactAddress";
     private static final String contactsTableBirthdate = "contactBirthdate";
+    private static final String contactsTableIconPath = "contactsIconPath";
 
     private SQLiteDatabase writableDB;
     private SQLiteDatabase readableDB;
@@ -49,7 +50,8 @@ public class DbManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create apps table
         db.execSQL("CREATE TABLE " + contactsTable + " (" + contactsTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + contactsTableName + " TEXT, "
-                + contactsTablePhoneNumber + " TEXT, " + contactsTableEmail + " TEXT, "  + contactsTableAddress + " TEXT, " + contactsTableBirthdate + " TEXT)");
+                + contactsTablePhoneNumber + " TEXT, " + contactsTableEmail + " TEXT, "  + contactsTableAddress + " TEXT, "
+                + contactsTableBirthdate + " TEXT, "  + contactsTableIconPath+ " TEXT)");
 
         Log.d(TAG, "The db has been created, this message should only appear once.");
     }
@@ -74,7 +76,7 @@ public class DbManager extends SQLiteOpenHelper {
 
         ArrayList<String> contactDatas = new ArrayList<>();
 
-        String[] columns = new String[]{contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate};
+        String[] columns = new String[]{contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate, contactsTableIconPath};
         Cursor cursor = readableDB.query(contactsTable, columns,contactsTableId + "=?",
                 new String[]{String.valueOf(id)}, null, null, null);
 
@@ -85,6 +87,7 @@ public class DbManager extends SQLiteOpenHelper {
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableEmail)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableAddress)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableBirthdate)));
+        contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableIconPath)));
         Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + ", " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
         Log.d(TAG, "Columns array is = " + Arrays.toString(cursor.getColumnNames()));
         cursor.close();
@@ -130,13 +133,14 @@ public class DbManager extends SQLiteOpenHelper {
      * @param address postal contact address
      * @param birthday contact birthday
      */
-    public void createNewContact(String name, String phoneNumber, String email, String address, String birthday) {
+    public void createNewContact(String name, String phoneNumber, String email, String address, String birthday, String iconPath) {
         ContentValues cv = new ContentValues();
         cv.put(contactsTableName, name);
         cv.put(contactsTablePhoneNumber, phoneNumber);
         cv.put(contactsTableEmail, email);
         cv.put(contactsTableAddress, address);
         cv.put(contactsTableBirthdate, birthday);
+        cv.put(contactsTableIconPath, iconPath);
 
         //Log.d(TAG, String.format("update Contact: Create contact with new value (name = %d, PhoneNumber = %d, email = %d, address = %d, birtdate = %d",
         //        name, phoneNumber, email, address, birthday));
