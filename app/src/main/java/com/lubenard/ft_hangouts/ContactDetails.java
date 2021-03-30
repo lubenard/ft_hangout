@@ -2,12 +2,15 @@ package com.lubenard.ft_hangouts;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +27,7 @@ public class ContactDetails extends Fragment {
     private DbManager dbManager;
     private View view;
     private Toolbar toolbar;
+    ArrayList<String> contactDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,13 +81,24 @@ public class ContactDetails extends Fragment {
                     return false;
             }
         });
+
+        Button callContact = view.findViewById(R.id.details_call);
+        callContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
+                getContext().startActivity(intent);
+            }
+        });
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if (contactId > 0) {
-            ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
+            contactDetails = dbManager.getContactDetail(contactId);
             TextView name = view.findViewById(R.id.contact_detail_name);
             TextView phoneNumber = view.findViewById(R.id.contact_detail_phone_number);
             TextView email = view.findViewById(R.id.contact_detail_email);
