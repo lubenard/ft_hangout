@@ -92,6 +92,21 @@ public class ContactDetails extends Fragment {
             }
         });
 
+        Button messageContact = view.findViewById(R.id.details_message);
+        messageContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MessageFragment fragment = new MessageFragment();
+                Bundle args = new Bundle();
+                args.putInt("contactId", contactId);
+                fragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, fragment, null)
+                        .addToBackStack(null).commit();
+            }
+        });
+
+
     }
 
     @Override
