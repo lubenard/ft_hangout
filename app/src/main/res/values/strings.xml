@@ -22,4 +22,6 @@
     <string name="lastPause">Last time this app was put in pause was :</string>
     <string name="error_bad_id">Error: bad id. Please try again.</string>
     <string name="no_info_provided">(no info provided)</string>
+    <string name="notif_channel_name">Message Channel</string>
+    <string name="notif_normal_channel_desc">Display all messages incoming</string>
 </resources>
