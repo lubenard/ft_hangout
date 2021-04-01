@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.concurrent.Callable;
 
 public class MessageFragment extends Fragment {
 

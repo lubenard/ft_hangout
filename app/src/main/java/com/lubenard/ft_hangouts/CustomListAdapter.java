@@ -2,13 +2,13 @@ package com.lubenard.ft_hangouts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -62,6 +62,7 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
             viewHolder.contactPhoneNumberEmail = (TextView) convertView.findViewById(R.id.custom_view_contactPhoneNumber);
             viewHolder.callButton = convertView.findViewById(R.id.call_contact);
             viewHolder.messageButton = convertView.findViewById(R.id.message_contact);
+            viewHolder.contactImageView = convertView.findViewById(R.id.custom_view_contactImage);
 
             result = convertView;
             convertView.setTag(viewHolder);
@@ -103,6 +104,11 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
 
         viewHolder.contactName.setSelected(true);
         viewHolder.contactPhoneNumberEmail.setSelected(true);
+
+        if (dataModel.getContactImage() != null)
+            viewHolder.contactImageView.setImageDrawable(Drawable.createFromPath(dataModel.getContactImage()));
+        else
+            viewHolder.contactImageView.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.ic_menu_help));
 
         /*viewHolder.txtVersion.setText(dataModel.getVersion_number());
         viewHolder.info.setOnClickListener(this);

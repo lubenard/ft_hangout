@@ -4,14 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -105,8 +103,6 @@ public class ContactDetails extends Fragment {
                         .addToBackStack(null).commit();
             }
         });
-
-
     }
 
     @Override
@@ -133,8 +129,11 @@ public class ContactDetails extends Fragment {
             email.setText(contactDetails.get(2));
             address.setText(contactDetails.get(3));
             birthday.setText(contactDetails.get(4));
-            icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            icon.setImageDrawable(Drawable.createFromPath(contactDetails.get(5)));
+
+            if (contactDetails.get(5) != null)
+                icon.setImageDrawable(Drawable.createFromPath(contactDetails.get(5)));
+            else
+                icon.setImageDrawable(getContext().getResources().getDrawable(android.R.drawable.ic_menu_help));
         }
         else {
             // trigger error, show toast and exit

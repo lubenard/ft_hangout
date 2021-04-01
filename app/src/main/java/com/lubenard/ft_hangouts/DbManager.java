@@ -5,13 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -121,13 +118,13 @@ public class DbManager extends SQLiteOpenHelper {
     public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList() {
         LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
 
-        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail};
+        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableIconPath};
         Cursor cursor = readableDB.query(contactsTable,  columns, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
             contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),
                     cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)),
-                    cursor.getString(cursor.getColumnIndex(contactsTableEmail)),  null));
+                    cursor.getString(cursor.getColumnIndex(contactsTableEmail)),  cursor.getString(cursor.getColumnIndex(contactsTableIconPath))));
             //Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + " and value " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
         }
         cursor.close();
@@ -165,13 +162,14 @@ public class DbManager extends SQLiteOpenHelper {
      * @param address postal contact address
      * @param birthday contact birthday
      */
-    public void updateContact(int id, String name, String phoneNumber, String email, String address, String birthday) {
+    public void updateContact(int id, String name, String phoneNumber, String email, String address, String birthday, String iconPath) {
         ContentValues cv = new ContentValues();
         cv.put(contactsTableName, name);
         cv.put(contactsTablePhoneNumber, phoneNumber);
         cv.put(contactsTableEmail, email);
         cv.put(contactsTableAddress, address);
         cv.put(contactsTableBirthdate, birthday);
+        cv.put(contactsTableIconPath, iconPath);
 
         int u = writableDB.update(contactsTable, cv, contactsTableId + "=?", new String[]{String.valueOf(id)});
         if (u == 0) {
@@ -181,6 +179,7 @@ public class DbManager extends SQLiteOpenHelper {
             cv.put(contactsTableEmail, email);
             cv.put(contactsTableAddress, address);
             cv.put(contactsTableBirthdate, birthday);
+            cv.put(contactsTableIconPath, iconPath);
             writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
         }
     }

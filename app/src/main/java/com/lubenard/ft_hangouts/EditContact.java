@@ -85,7 +85,7 @@ public class EditContact extends Fragment {
                     if (contactId == -1)
                         dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage);
                     else
-                        dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday);
+                        dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday, iconImage);
 
                     getActivity().getSupportFragmentManager().popBackStackImmediate();
                     return true;
@@ -110,8 +110,9 @@ public class EditContact extends Fragment {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
+        Log.d("EditContact", "OnActivityResult launched, datas are: " + resultCode + " datas = " + data + " data content " + data.getData());
 
+        if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
             String filename;
 
             if (contactId > 0)
@@ -126,7 +127,7 @@ public class EditContact extends Fragment {
             Log.d("Activity", "file dir = " + getContext().getFilesDir().getAbsolutePath() + filename);
             File file = new File(getContext().getFilesDir().getAbsolutePath() + filename);
 
-            if(file.exists())
+            if (file.exists())
                 Log.d("Activity", "the file exist");
             else
                 Log.d("Activity", "the file does not exist");
