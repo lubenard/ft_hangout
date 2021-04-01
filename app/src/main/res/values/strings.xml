@@ -24,4 +24,6 @@
     <string name="no_info_provided">(no info provided)</string>
     <string name="notif_channel_name">Message Channel</string>
     <string name="notif_normal_channel_desc">Display all messages incoming</string>
+    <string name="no_access_to_send_sms">The app cannot send / receive sms. Please consider allowing it to send sms.</string>
+    <string name="message_new_contact_title">Send a new message</string>
 </resources>

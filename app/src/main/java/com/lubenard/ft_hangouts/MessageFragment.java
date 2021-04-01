@@ -1,30 +1,22 @@
 package com.lubenard.ft_hangouts;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
+import android.Manifest;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.lubenard.ft_hangouts.Utils.Utils;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-
-import static android.app.Activity.RESULT_OK;
+import java.util.concurrent.Callable;
 
 public class MessageFragment extends Fragment {
 
@@ -64,12 +56,12 @@ public class MessageFragment extends Fragment {
 
         sendMessage = view.findViewById(R.id.sendMessageImageButton);
 
-        /*if (contactId == -1)
-            toolbar.setTitle(R.string.app_create_contact_name);
+        if (contactId == -1)
+            toolbar.setTitle(R.string.message_new_contact_title);
         else {
-            toolbar.setTitle(R.string.app_edit_contact_name);
             ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
-        }*/
+            toolbar.setTitle(contactDetails.get(0));
+        }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,13 +84,23 @@ public class MessageFragment extends Fragment {
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                long insertedMessageId = dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
+                MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage("(555) 521-5556", null, messageContent.getText().toString(), null, null);
+                    Toast.makeText(getContext(), "SMS sent.",
+                            Toast.LENGTH_LONG).show();
+                    long insertedMessageId = dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
 
-                // We do not update all messages. If there is too much messages, that could take a while
-                dataModels.add(new MessageModel(insertedMessageId, contactId, messageContent.getText().toString(), "TO"));
-                adapter.notifyDataSetChanged();
-                messageContent.setText("");
-                //updateMessageList();
+                    // We do not update all messages. If there is too much messages, that could take a while
+                    dataModels.add(new MessageModel(insertedMessageId, contactId, messageContent.getText().toString(), "TO"));
+                    adapter.notifyDataSetChanged();
+                    messageContent.setText("");
+                    //updateMessageList();
+                    return null;
+                }, () -> {
+                    Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
+                    return null;
+                });
             }
         });
     }
