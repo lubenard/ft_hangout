@@ -34,7 +34,10 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
                 }
                 else
                     messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                sendNotificationWithQuickAnswer(context, "new message from " + messages[i].getOriginatingAddress(), messages[i].getMessageBody(), R.drawable.baseline_chat_black_48);
+                DbManager dbManager = new DbManager(context);
+                dbManager.saveNewMessage(dbManager.getContactIdFromPhoneNumber(messages[i].getOriginatingAddress()), messages[i].getMessageBody(),"FROM");
+                String contactName = dbManager.getContactNameFromPhoneNumber(messages[i].getOriginatingAddress());
+                sendNotificationWithQuickAnswer(context, (contactName == null) ? messages[i].getOriginatingAddress() : contactName, messages[i].getMessageBody(), R.drawable.baseline_chat_black_48);
             }
         }
     }

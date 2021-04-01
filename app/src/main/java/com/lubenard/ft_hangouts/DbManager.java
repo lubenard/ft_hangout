@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 
 import java.lang.reflect.Array;
@@ -28,10 +29,17 @@ public class DbManager extends SQLiteOpenHelper {
     private static final String contactsTableId = "id";
     private static final String contactsTableName = "contactName";
     private static final String contactsTablePhoneNumber = "contactPhoneNumber";
+    private static final String contactsTableParsedPhoneNumber = "contactParsedPhoneNumber";
     private static final String contactsTableEmail = "contactEmail";
     private static final String contactsTableAddress = "contactAddress";
     private static final String contactsTableBirthdate = "contactBirthdate";
     private static final String contactsTableIconPath = "contactsIconPath";
+
+    private static final String messagesTable = "messages";
+    private static final String messageTableId = "id";
+    private static final String messageTableContactId = "contactId";
+    private static final String messageTableContent = "content";
+    private static final String messageTableDirection = "direction";
 
     private SQLiteDatabase writableDB;
     private SQLiteDatabase readableDB;
@@ -50,8 +58,11 @@ public class DbManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Create apps table
         db.execSQL("CREATE TABLE " + contactsTable + " (" + contactsTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + contactsTableName + " TEXT, "
-                + contactsTablePhoneNumber + " TEXT, " + contactsTableEmail + " TEXT, "  + contactsTableAddress + " TEXT, "
+                + contactsTablePhoneNumber + " TEXT, " + contactsTableParsedPhoneNumber + " INTEGER, " + contactsTableEmail + " TEXT, "  + contactsTableAddress + " TEXT, "
                 + contactsTableBirthdate + " TEXT, "  + contactsTableIconPath+ " TEXT)");
+
+        db.execSQL("CREATE TABLE " + messagesTable + " (" + messageTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + messageTableContactId + " INTEGER, "
+                + messageTableContent + " TEXT, "  + messageTableDirection + " TEXT)");
 
         Log.d(TAG, "The db has been created, this message should only appear once.");
     }
@@ -73,7 +84,6 @@ public class DbManager extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> getContactDetail(int id) {
-
         ArrayList<String> contactDatas = new ArrayList<>();
 
         String[] columns = new String[]{contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate, contactsTableIconPath};
@@ -137,13 +147,12 @@ public class DbManager extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(contactsTableName, name);
         cv.put(contactsTablePhoneNumber, phoneNumber);
+        cv.put(contactsTableParsedPhoneNumber, phoneNumber.replaceAll( "[^0-9]",""));
         cv.put(contactsTableEmail, email);
         cv.put(contactsTableAddress, address);
         cv.put(contactsTableBirthdate, birthday);
         cv.put(contactsTableIconPath, iconPath);
 
-        //Log.d(TAG, String.format("update Contact: Create contact with new value (name = %d, PhoneNumber = %d, email = %d, address = %d, birtdate = %d",
-        //        name, phoneNumber, email, address, birthday));
         writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -176,11 +185,66 @@ public class DbManager extends SQLiteOpenHelper {
         }
     }
 
+    public long saveNewMessage(int contactId, String messageContent, String direction) {
+        ContentValues cv = new ContentValues();
+        cv.put(messageTableContactId, contactId);
+        cv.put(messageTableContent, messageContent);
+        cv.put(messageTableDirection, direction);
+
+        return writableDB.insertWithOnConflict(messagesTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+    }
+
     /**
      * Close the db when finished using it.
      */
     public void closeDb() {
         if (writableDB != null) { writableDB.close();}
+    }
+
+    public int getContactIdFromPhoneNumber(String phoneNumber) {
+        int contactId = -1;
+        String parsedPhoneNumber = phoneNumber.replaceAll( "[^0-9]","");
+        String[] columns = new String[]{contactsTableId};
+        Cursor cursor = readableDB.query(contactsTable, columns,contactsTableParsedPhoneNumber + "=?",
+                new String[]{parsedPhoneNumber}, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            contactId = cursor.getInt(cursor.getColumnIndex(contactsTableId));
+            cursor.close();
+        }
+        return contactId;
+    }
+
+    public String getContactNameFromPhoneNumber(String phoneNumber) {
+        String contactName = null;
+        String parsedPhoneNumber = phoneNumber.replaceAll( "[^0-9]","");
+        String[] columns = new String[]{contactsTableName};
+        Cursor cursor = readableDB.query(contactsTable, columns,contactsTableParsedPhoneNumber + "=?",
+                new String[]{parsedPhoneNumber}, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(contactsTableName));
+            cursor.close();
+        }
+        return contactName;
+    }
+
+    public LinkedHashMap<Integer, MessageModel> getAllMessageFromContactId(int contactId) {
+        LinkedHashMap<Integer, MessageModel> messageDatas = new LinkedHashMap<>();
+
+        Log.d(TAG, "function launched");
+        String[] columns = new String[]{messageTableId, messageTableContactId, messageTableContent, messageTableDirection};
+        Cursor cursor = readableDB.query(messagesTable,  columns, messageTableContactId + "=?",
+                new String[]{String.valueOf(contactId)}, null, null, null);
+
+        while (cursor.moveToNext()) {
+            messageDatas.put(cursor.getInt(cursor.getColumnIndex(messageTableId)), new MessageModel(cursor.getInt(cursor.getColumnIndex(messageTableId)),
+                    cursor.getInt(cursor.getColumnIndex(messageTableContactId)), cursor.getString(cursor.getColumnIndex(messageTableContent)),
+                    cursor.getString(cursor.getColumnIndex(messageTableDirection))));
+            Log.d(TAG, "getMessage adding " + cursor.getString(cursor.getColumnIndex(messageTableContactId)) + " and value " + cursor.getString(cursor.getColumnIndex(messageTableContent)));
+        }
+        cursor.close();
+        return messageDatas;
     }
 }
 

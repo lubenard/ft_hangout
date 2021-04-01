@@ -81,6 +81,7 @@ public class MainFragment extends Fragment {
     }
 
     private void updateContactList() {
+        dataModels.clear();
         LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList();
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
@@ -103,7 +104,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        dataModels.clear();
         updateContactList();
     }
 }
