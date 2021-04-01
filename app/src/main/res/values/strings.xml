@@ -26,4 +26,7 @@
     <string name="notif_normal_channel_desc">Display all messages incoming</string>
     <string name="no_access_to_send_sms">The app cannot send / receive sms. Please consider allowing it to send sms.</string>
     <string name="message_new_contact_title">Send a new message</string>
+    <string name="select_or_take_picture">Select or take a new Picture</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="allow_camera">If you want to be able to take picture with the camera, please allow it</string>
 </resources>

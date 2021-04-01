@@ -1,6 +1,8 @@
 package com.lubenard.ft_hangouts;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -19,7 +22,12 @@ import androidx.fragment.app.Fragment;
 import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -100,39 +108,55 @@ public class EditContact extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                String pickTitle = "Select or take a new Picture";
+                String pickTitle = getString(R.string.select_or_take_picture);
                 Intent chooserIntent = Intent.createChooser(intent, pickTitle);
-                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePhotoIntent });
-                startActivityForResult(Intent.createChooser(chooserIntent,"Select Picture"), 1);
+                MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.CAMERA, () -> {
+                    Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePhotoIntent });
+                    startActivityForResult(Intent.createChooser(chooserIntent, getString(R.string.select_picture)), 1);
+                    return null;
+
+                }, () -> {
+                    Toast.makeText(getContext(), getContext().getString(R.string.allow_camera), Toast.LENGTH_LONG).show();
+                    startActivityForResult(Intent.createChooser(chooserIntent, getString(R.string.select_picture)), 1);
+                    return null;
+                });
             }
         });
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("EditContact", "OnActivityResult launched, datas are: " + resultCode + " datas = " + data + " data content " + data.getData());
+        String filename;
+        if (resultCode == RESULT_OK && data != null && data.getData() == null) {
+            Log.d("EditContact", "Pic took from camera");
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
 
-        if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
-            String filename;
-
-            if (contactId > 0)
-                filename = "/" + contactId;
-            else
-                filename = "/image.jpg";
-
-            Log.d("Activity", "Result is okay, nice");
-            Uri selectedImageUri = data.getData();
-            Log.d("Activity", "is null ? " + data.getData());
-            Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
-            Log.d("Activity", "file dir = " + getContext().getFilesDir().getAbsolutePath() + filename);
-            File file = new File(getContext().getFilesDir().getAbsolutePath() + filename);
-
-            if (file.exists())
-                Log.d("Activity", "the file exist");
-            else
-                Log.d("Activity", "the file does not exist");
+            filename = new SimpleDateFormat("/dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".jpg";
 
             iconImage = getContext().getFilesDir().getAbsolutePath() + filename;
+
+            Log.d("EditContact", "file path = " + iconImage);
+            try {
+                photo.compress(Bitmap.CompressFormat.JPEG, 90, new FileOutputStream(iconImage));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            //Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
+
+            imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imagePicker.setImageBitmap(photo);
+        }
+
+        if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
+            filename = new SimpleDateFormat("/dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".jpg";
+
+            Uri selectedImageUri = data.getData();
+            Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
+            Log.d("EditContact", "file path = " + getContext().getFilesDir().getAbsolutePath() + filename);
+
+            iconImage = getContext().getFilesDir().getAbsolutePath() + filename;
+
             imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imagePicker.setImageDrawable(Drawable.createFromPath(getContext().getFilesDir().getAbsolutePath() + filename));
         }
