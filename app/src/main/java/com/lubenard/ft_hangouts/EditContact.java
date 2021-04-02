@@ -141,9 +141,7 @@ public class EditContact extends Fragment {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-            //Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
-
+            
             imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imagePicker.setImageBitmap(photo);
         }

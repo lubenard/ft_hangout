@@ -91,10 +91,10 @@ public class MessageFragment extends Fragment {
                     long insertedMessageId = dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
 
                     // We do not update all messages. If there is too much messages, that could take a while
-                    dataModels.add(new MessageModel(insertedMessageId, contactId, messageContent.getText().toString(), "TO"));
-                    adapter.notifyDataSetChanged();
+                    //dataModels.add(new MessageModel(insertedMessageId, contactId, messageContent.getText().toString(), "TO"));
+                    //adapter.notifyDataSetChanged();
                     messageContent.setText("");
-                    //updateMessageList();
+                    updateMessageList();
                     return null;
                 }, () -> {
                     Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();

@@ -86,7 +86,7 @@ public class MainFragment extends Fragment {
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
         }
-        adapter = new CustomListAdapter(dataModels, getContext());
+        adapter = new CustomListAdapter(dataModels, getContext(), getActivity());
         listView.setAdapter(adapter);
     }
 

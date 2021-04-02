@@ -1,9 +1,11 @@
 package com.lubenard.ft_hangouts;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +15,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
+
 import java.util.ArrayList;
 
 public class CustomListAdapter extends ArrayAdapter<ContactModel> implements View.OnClickListener{
 
     private ArrayList<ContactModel> dataSet;
-    Context mContext;
+    private Context mContext;
+    private FragmentActivity activity;
 
     // View lookup cache
     private static class ViewHolder {
@@ -29,10 +34,11 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         ImageButton messageButton;
     }
 
-    public CustomListAdapter(ArrayList<ContactModel> data, Context context) {
+    public CustomListAdapter(ArrayList<ContactModel> data, Context context, FragmentActivity activity) {
         super(context, R.layout.custom_contact_list_element, data);
         this.dataSet = data;
         this.mContext = context;
+        this.activity = activity;
     }
 
     @Override
@@ -99,6 +105,13 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
             @Override
             public void onClick(View view) {
                 Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
+                MessageFragment fragment = new MessageFragment();
+                Bundle args = new Bundle();
+                args.putInt("contactId", dataModel.getId());
+                fragment.setArguments(args);
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, fragment, null)
+                        .addToBackStack(null).commit();
             }
         });
 
