@@ -7,6 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -24,12 +29,12 @@ public class ContactDetails extends Fragment {
     private int contactId = -1;
     private DbManager dbManager;
     private View view;
-    private Toolbar toolbar;
     ArrayList<String> contactDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.contact_page_fragment, container, false);
     }
 
@@ -43,42 +48,8 @@ public class ContactDetails extends Fragment {
         Bundle bundle = this.getArguments();
         contactId = bundle.getInt("contactId", -1);
 
-        toolbar = view.findViewById(R.id.details_toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Get back to last fragment in the stack
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            }
-        });
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_edit_contact:
-                    EditContact fragment = new EditContact();
-                    Bundle args = new Bundle();
-                    args.putInt("contactId", contactId);
-                    fragment.setArguments(args);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, fragment, null)
-                            .addToBackStack(null).commit();
-                    return true;
-                case R.id.action_delete_contact:
-                    new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
-                            .setMessage(R.string.alertdialog_delete_contact_body)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dbManager.deleteContact(contactId);
-                                    getActivity().getSupportFragmentManager().popBackStackImmediate();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null)
-                            .setIcon(android.R.drawable.ic_dialog_alert).show();
-                    return true;
-                default:
-                    return false;
-            }
-        });
 
         Button callContact = view.findViewById(R.id.details_call);
         callContact.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +77,41 @@ public class ContactDetails extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_contact_details, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_edit_contact:
+                EditContact fragment = new EditContact();
+                Bundle args = new Bundle();
+                args.putInt("contactId", contactId);
+                fragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, fragment, null)
+                        .addToBackStack(null).commit();
+                return true;
+            case R.id.action_delete_contact:
+                new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
+                        .setMessage(R.string.alertdialog_delete_contact_body)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbManager.deleteContact(contactId);
+                                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         if (contactId > 0) {
@@ -120,9 +126,9 @@ public class ContactDetails extends Fragment {
             // If the contact has a name, show it as Activity title.
             // Else, show the phoneNumber
             if (contactDetails.get(0) != null)
-               toolbar.setTitle(contactDetails.get(0));
+               getActivity().setTitle(contactDetails.get(0));
             else
-                toolbar.setTitle(contactDetails.get(1));
+                getActivity().setTitle(contactDetails.get(1));
 
             name.setText(contactDetails.get(0));
             phoneNumber.setText(contactDetails.get(1));

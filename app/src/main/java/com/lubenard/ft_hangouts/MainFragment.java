@@ -6,11 +6,16 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import android.view.ViewGroup;
@@ -30,6 +35,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.main_fragment, container, false);
     }
 
@@ -37,6 +43,7 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(R.string.app_title);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -52,52 +59,53 @@ public class MainFragment extends Fragment {
 
         dbManager = new DbManager(getContext());
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ContactModel dataModel = dataModels.get(i);
-                Log.d("ONCLICK", "Element " + dataModel.getId());
-                ContactDetails fragment = new ContactDetails();
-                Bundle args = new Bundle();
-                args.putInt("contactId", dataModel.getId());
-                fragment.setArguments(args);
+        listView.setOnItemClickListener((adapterView, view1, i, l) -> {
+            ContactModel dataModel = dataModels.get(i);
+            Log.d("ONCLICK", "Element " + dataModel.getId());
+            ContactDetails fragment = new ContactDetails();
+            Bundle args = new Bundle();
+            args.putInt("contactId", dataModel.getId());
+            fragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment, null)
+                    .addToBackStack(null).commit();
+        });
+
+        listView.setOnItemLongClickListener((adapterView, view12, i, l) -> {
+            ContactModel dataModel = dataModels.get(i);
+            new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
+                    .setMessage(R.string.alertdialog_delete_contact_body)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dbManager.deleteContact(dataModel.getId());
+                            getActivity().getSupportFragmentManager().popBackStackImmediate();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert).show();
+            return false;
+        });
+
+        //((AppCompatActivity)getActivity()).getSupportActionBar();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_settings:
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, fragment, null)
+                        .replace(android.R.id.content, new SettingsFragment(), null)
                         .addToBackStack(null).commit();
-            }
-        });
-
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ContactModel dataModel = dataModels.get(i);
-                new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
-                        .setMessage(R.string.alertdialog_delete_contact_body)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dbManager.deleteContact(dataModel.getId());
-                                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert).show();
-                return false;
-            }
-        });
-
-        Toolbar toolbar = view.findViewById(R.id.main_toolbar);
-        toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_settings:
-                    // Navigate to settings screen
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(android.R.id.content, new SettingsFragment(), null)
-                            .addToBackStack(null).commit();
-                    return true;
-                default:
-                    return false;
-            }
-        });
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateContactList() {

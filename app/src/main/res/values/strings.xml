@@ -46,4 +46,5 @@
     <string name="ui">UI</string>
     <string name="tweaks">TWEAKS</string>
     <string name="other">OTHER</string>
+    <string name="action_save">Save this contact</string>
 </resources>

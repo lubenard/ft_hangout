@@ -1,6 +1,8 @@
 package com.lubenard.ft_hangouts;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -9,6 +11,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -16,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -36,13 +43,13 @@ public class EditContact extends Fragment {
     private int contactId;
     private DbManager dbManager;
     private View view;
-    private Toolbar toolbar;
     private ImageButton imagePicker;
     private String iconImage = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.edit_contact_fragment, container, false);
     }
 
@@ -51,18 +58,17 @@ public class EditContact extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         dbManager = new DbManager(getContext());
-        this.view = view;
 
         Bundle bundle = this.getArguments();
         contactId = bundle.getInt("contactId", -1);
 
-        toolbar = view.findViewById(R.id.edit_contact_toolbar);
         imagePicker = view.findViewById(R.id.imagePicker);
+        this.view = view;
 
         if (contactId == -1)
-            toolbar.setTitle(R.string.app_create_contact_name);
+            getActivity().setTitle(R.string.app_create_contact_name);
         else {
-            toolbar.setTitle(R.string.app_edit_contact_name);
+            getActivity().setTitle(R.string.app_edit_contact_name);
             ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
             // Load datas into the fields
             ((EditText)view.findViewById(R.id.editTextTextPersonName)).setText(contactDetails.get(0));
@@ -72,35 +78,7 @@ public class EditContact extends Fragment {
             ((EditText)view.findViewById(R.id.editTextBirthday)).setText(contactDetails.get(4));
         }
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Get back to last fragment in the stack
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            }
-        });
-        toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_validate:
-                    // TODO: see if with API we can insert contact into system contacts
-                    // For now, just register into own contacts
-                    String name = ((EditText)view.findViewById(R.id.editTextTextPersonName)).getText().toString();
-                    String phoneNumber = ((EditText)view.findViewById(R.id.editTextPhone)).getText().toString();
-                    String email = ((EditText)view.findViewById(R.id.editTextTextEmailAddress)).getText().toString();
-                    String address = ((EditText)view.findViewById(R.id.editTextTextPostalAddress)).getText().toString();
-                    String birthday = ((EditText)view.findViewById(R.id.editTextBirthday)).getText().toString();
-
-                    if (contactId == -1)
-                        dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage);
-                    else
-                        dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday, iconImage);
-
-                    getActivity().getSupportFragmentManager().popBackStackImmediate();
-                    return true;
-                default:
-                    return false;
-            }
-        });
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +101,37 @@ public class EditContact extends Fragment {
                 });
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_edit_contact, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_validate:
+                // TODO: see if with API we can insert contact into system contacts
+                // For now, just register into own contacts
+                String name = ((EditText)view.findViewById(R.id.editTextTextPersonName)).getText().toString();
+                String phoneNumber = ((EditText)view.findViewById(R.id.editTextPhone)).getText().toString();
+                String email = ((EditText)view.findViewById(R.id.editTextTextEmailAddress)).getText().toString();
+                String address = ((EditText)view.findViewById(R.id.editTextTextPostalAddress)).getText().toString();
+                String birthday = ((EditText)view.findViewById(R.id.editTextBirthday)).getText().toString();
+
+                if (contactId == -1)
+                    dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage);
+                else
+                    dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday, iconImage);
+
+                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                return true;
+            default:
+                return false;
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

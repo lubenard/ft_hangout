@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -112,6 +114,17 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.edit().putBoolean("has_notif_channel_created", true).apply();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                getSupportFragmentManager().popBackStackImmediate();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

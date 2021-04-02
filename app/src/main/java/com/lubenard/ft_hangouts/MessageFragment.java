@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
@@ -41,6 +42,8 @@ public class MessageFragment extends Fragment {
 
         EditText messageContent = view.findViewById(R.id.editTextMessageContent);
 
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         dbManager = new DbManager(getContext());
         this.view = view;
 
@@ -51,24 +54,14 @@ public class MessageFragment extends Fragment {
 
         listView = view.findViewById(R.id.message_list);
 
-        toolbar = view.findViewById(R.id.message_toolbar);
-
         sendMessage = view.findViewById(R.id.sendMessageImageButton);
 
         if (contactId == -1)
             toolbar.setTitle(R.string.message_new_contact_title);
         else {
             ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
-            toolbar.setTitle(contactDetails.get(0));
+            getActivity().setTitle(contactDetails.get(0));
         }
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Get back to last fragment in the stack
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
-            }
-        });
 
         /*toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
