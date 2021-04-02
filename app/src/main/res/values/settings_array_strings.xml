@@ -27,6 +27,25 @@
         <item>battery_saver</item>
         <item>system</item>
     </string-array>
+
+    <string-array name="ui_header_color_titles">
+        <item>@string/settings_ui_header_color_default</item>
+        <item>@string/settings_ui_header_color_black</item>
+        <item>@string/settings_ui_header_color_white</item>
+        <item>@string/settings_ui_header_color_blue</item>
+        <item>@string/settings_ui_header_color_red</item>
+        <item>@string/settings_ui_header_color_green</item>
+    </string-array>
+
+    <string-array name="ui_header_color_values">
+        <item>default</item>
+        <item>black</item>
+        <item>white</item>
+        <item>blue</item>
+        <item>red</item>
+        <item>green</item>
+    </string-array>
+
     <string name="settings_ui_language_EN" translatable="false">English</string>
     <string name="settings_ui_language_FR" translatable="false">Francais</string>
 </resources>

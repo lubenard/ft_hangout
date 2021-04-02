@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -35,7 +37,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         activity.setTitle(R.string.action_settings);
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //((AppCompatActivity)getActivity()).getSupportActionBar()
 
         // Language change listener
         final Preference language = findPreference("ui_language");
@@ -75,6 +76,36 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         break;
                     case "system":
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        // Theme change listener
+        final Preference headerColor = findPreference("ui_header_color");
+        headerColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Log.d(TAG, "Theme value has changed for " + newValue);
+                switch (newValue.toString()) {
+                    case "default":
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6200EE")));
+                        break;
+                    case "white":
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+                        break;
+                    case "black":
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+                        break;
+                    case "blue":
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3366FF")));
+                        break;
+                    case "red":
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6666")));
+                        break;
+                    case "green":
+                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33CCgit 33")));
                         break;
                 }
                 return true;

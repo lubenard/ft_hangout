@@ -47,4 +47,11 @@
     <string name="tweaks">TWEAKS</string>
     <string name="other">OTHER</string>
     <string name="action_save">Save this contact</string>
+    <string name="ui_header_color_title">Color of header</string>
+    <string name="settings_ui_header_color_default">(Default) Purple</string>
+    <string name="settings_ui_header_color_black">Noir</string>
+    <string name="settings_ui_header_color_white">Blanc</string>
+    <string name="settings_ui_header_color_blue">Blue</string>
+    <string name="settings_ui_header_color_red">Red</string>
+    <string name="settings_ui_header_color_green">Green</string>
 </resources>

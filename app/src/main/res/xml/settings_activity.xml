@@ -26,6 +26,14 @@
             android:entries="@array/ui_theme_titles"
             android:entryValues="@array/ui_theme_values"
             android:defaultValue="dark"/>
+
+        <ListPreference
+            android:key="ui_header_color"
+            android:title="@string/ui_header_color_title"
+            app:summary="@string/actually_value"
+            android:entries="@array/ui_header_color_titles"
+            android:entryValues="@array/ui_header_color_values"
+            android:defaultValue="default"/>
     </PreferenceCategory>
 
     <PreferenceCategory
