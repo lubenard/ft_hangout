@@ -34,6 +34,11 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="tweaks_create_new_contact_when_unknown_number"
+            android:title="Create a new contact if a message from unknown sender is received" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="tweaks_integrate_system_contacts"
             android:title="Integrate system contacts" />
     </PreferenceCategory>

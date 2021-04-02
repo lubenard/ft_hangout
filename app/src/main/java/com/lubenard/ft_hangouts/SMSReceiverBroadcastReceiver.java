@@ -5,17 +5,21 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("SMSReceiver", "Message received !");
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         Bundle myBundle = intent.getExtras();
         SmsMessage [] messages = null;
@@ -33,8 +37,13 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
                 else
                     messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                 DbManager dbManager = new DbManager(context);
-                dbManager.saveNewMessage(dbManager.getContactIdFromPhoneNumber(messages[i].getOriginatingAddress()), messages[i].getMessageBody(),"FROM");
+
                 String contactName = dbManager.getContactNameFromPhoneNumber(messages[i].getOriginatingAddress());
+                if (preferences.getBoolean("tweaks_create_new_contact_when_unknown_number", false) && contactName == null) {
+                    dbManager.createNewContact(messages[i].getOriginatingAddress(), messages[i].getOriginatingAddress(), null, null, null, null);
+                }
+
+                dbManager.saveNewMessage(dbManager.getContactIdFromPhoneNumber(messages[i].getOriginatingAddress()), messages[i].getMessageBody(),"FROM");
                 sendNotificationWithQuickAnswer(context, (contactName == null) ? messages[i].getOriginatingAddress() : contactName, messages[i].getMessageBody(), R.drawable.baseline_chat_black_48);
             }
         }
