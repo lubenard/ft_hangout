@@ -1,5 +1,7 @@
 package com.lubenard.ft_hangouts;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -62,6 +64,24 @@ public class MainFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(android.R.id.content, fragment, null)
                         .addToBackStack(null).commit();
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ContactModel dataModel = dataModels.get(i);
+                new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
+                        .setMessage(R.string.alertdialog_delete_contact_body)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dbManager.deleteContact(dataModel.getId());
+                                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert).show();
+                return false;
             }
         });
 
