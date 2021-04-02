@@ -46,14 +46,14 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Call" />
+            android:text="@string/call" />
 
         <Button
             android:id="@+id/details_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Message" />
+            android:text="@string/message" />
 
     </LinearLayout>
 
@@ -64,7 +64,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Name:" />
+        android:text="@string/name" />
 
     <TextView
         android:id="@+id/contact_detail_name"
@@ -81,7 +81,7 @@
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Phone number:" />
+        android:text="@string/phone_number" />
 
     <TextView
         android:id="@+id/contact_detail_phone_number"
@@ -98,7 +98,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Email:" />
+        android:text="@string/email" />
 
     <TextView
         android:id="@+id/contact_detail_email"
@@ -115,7 +115,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Address:" />
+        android:text="@string/address" />
 
     <TextView
         android:id="@+id/contact_detail_address"
@@ -132,7 +132,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Birthday:" />
+        android:text="@string/birthday" />
 
     <TextView
         android:id="@+id/contact_detail_birthday"
@@ -141,5 +141,4 @@
         android:textSize="25dp"
         android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
         android:text="Contact_birthday" />
-
 </LinearLayout>

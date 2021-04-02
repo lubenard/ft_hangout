@@ -86,8 +86,7 @@ public class MessageFragment extends Fragment {
                 MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage("(555) 521-5556", null, messageContent.getText().toString(), null, null);
-                    Toast.makeText(getContext(), "SMS sent.",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
                     long insertedMessageId = dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
 
                     // We do not update all messages. If there is too much messages, that could take a while

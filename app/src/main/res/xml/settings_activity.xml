@@ -9,7 +9,7 @@
 
     <PreferenceCategory
         app:key="cat_ui"
-        app:title="UI">
+        app:title="@string/ui">
 
         <ListPreference
             android:key="ui_language"
@@ -22,7 +22,7 @@
         <ListPreference
             android:key="ui_theme"
             android:title="@string/ui_theme_title"
-            app:summary="Actually, %s"
+            app:summary="@string/actually_value"
             android:entries="@array/ui_theme_titles"
             android:entryValues="@array/ui_theme_values"
             android:defaultValue="dark"/>
@@ -30,22 +30,22 @@
 
     <PreferenceCategory
         app:key="cat_tweaks"
-        app:title="TWEAKS">
+        app:title="@string/tweaks">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="tweaks_create_new_contact_when_unknown_number"
-            android:title="Create a new contact if a message from unknown sender is received" />
+            android:title="@string/option_create_contact_from_unknown" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="tweaks_integrate_system_contacts"
-            android:title="Integrate system contacts" />
+            android:title="@string/option_integrate_system_settings" />
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="cat_other"
-        app:title="OTHER">
+        app:title="@string/other">
 
         <Preference
             app:key="other_feedback"

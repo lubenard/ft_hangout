@@ -1,0 +1,48 @@
+<resources>
+
+    <string name="action_settings">Paramètres</string>
+    <string name="app_title">Mes contacts</string>
+    <string name="app_create_contact_name">Créer un nouveau contact</string>
+    <string name="app_edit_contact_name">Editer ce contact</string>
+    <string name="alertdialog_delete_contact_title">Voulez vous supprimer ce contact ?</string>
+    <string name="alertdialog_delete_contact_body">Cette operation est irreversible, et ne peut pas être annulée. Êtes-vous sur de vouloir procéder ?</string>
+
+    <string name="settings_ui_theme_clear">Clair</string>
+    <string name="settings_ui_theme_dark">Sombre</string>
+    <string name="settings_ui_theme_black">Noir</string>
+    <string name="settings_ui_system">Système</string>
+    <string name="ui_language_title">Langage</string>
+    <string name="ui_theme_title">Thème</string>
+    <string name="settings_other_feedback_title">Faire un retour sur l\'app</string>
+    <string name="settings_other_feedback_description">Envoyez moi un mail !</string>
+    <string name="action_edit">Editer ce contact</string>
+    <string name="action_delete">Supprimer ce contact</string>
+    <string name="lastPause">La dernière fois que cette app a été mise en pause était a :</string>
+    <string name="error_bad_id">Erreur: mauvais id. Merci de réessayer</string>
+    <string name="no_info_provided">(Pas d\'infos données)</string>
+    <string name="notif_channel_name">Canal de messages</string>
+    <string name="notif_normal_channel_desc">Affiche tous les messages arrivant</string>
+    <string name="no_access_to_send_sms">Cette app ne peut pas envoyer / recevoir de sms. Merci de considérer l\'autoriser a envoyer des sms.</string>
+    <string name="message_new_contact_title">Envoyer un nouveau message</string>
+    <string name="select_or_take_picture">Selectionner ou prendre une photo</string>
+    <string name="select_picture">Choisir une image</string>
+    <string name="allow_camera">If vous voulez être capable de prendre une photo avec la caméra, merci de l\'autoriser</string>
+    <string name="impossible_call_no_phone_number">Impossible d\'appeler le contact. Aucun numéro de téléhone n\'a été fournis.</string>
+    <string name="settings_ui_theme_battery_saver">Sauvegarde batterie</string>
+    <string name="toast_sms_sent">SMS envoyé.</string>
+    <string name="call">Appeler</string>
+    <string name="message">Message</string>
+    <string name="name">Nom :</string>
+    <string name="phone_number">Numéro de téléphone :</string>
+    <string name="email">Email :</string>
+    <string name="address">Addresse :</string>
+    <string name="birthday">Date de naissance :</string>
+    <string name="type_your_messsage">Tapez votre message</string>
+    <string name="send_sms">Envoyer un sms</string>
+    <string name="actually_value">Actuellement, %s</string>
+    <string name="option_create_contact_from_unknown">Créer un nouveau contact si un un message inconnu est envoyé</string>
+    <string name="option_integrate_system_settings">Integrer les contacts systèmes</string>
+    <string name="ui">UI</string>
+    <string name="other">AUTRES</string>
+    <string name="tweaks">AJUSTEMENTS</string>
+</resources>

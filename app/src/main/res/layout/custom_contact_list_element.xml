@@ -51,6 +51,7 @@
 
     <ImageButton
         android:id="@+id/call_contact"
+        android:contentDescription="@string/call"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="33"
@@ -59,6 +60,7 @@
 
     <ImageButton
         android:id="@+id/message_contact"
+        android:contentDescription="@string/message"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="33"

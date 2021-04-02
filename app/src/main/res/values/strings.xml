@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ft_hangouts</string>
+    <string name="app_name" translatable="false">ft_hangouts</string>
 
     <string name="action_settings">Settings</string>
     <string name="app_title">My contacts</string>
@@ -30,4 +30,20 @@
     <string name="select_picture">Select Picture</string>
     <string name="allow_camera">If you want to be able to take picture with the camera, please allow it</string>
     <string name="impossible_call_no_phone_number">Impossible to call the contact. No phone number has been saved.</string>
+    <string name="toast_sms_sent">SMS sent.</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
+    <string name="name">Name:</string>
+    <string name="phone_number">Phone number:</string>
+    <string name="email">Email:</string>
+    <string name="address">Address:</string>
+    <string name="birthday">Birthday:</string>
+    <string name="type_your_messsage">Type your messsage</string>
+    <string name="send_sms">Send sms</string>
+    <string name="actually_value">Actually, %s</string>
+    <string name="option_create_contact_from_unknown">Create a new contact if a message from unknown sender is received</string>
+    <string name="option_integrate_system_settings">Integrate system contacts</string>
+    <string name="ui">UI</string>
+    <string name="tweaks">TWEAKS</string>
+    <string name="other">OTHER</string>
 </resources>

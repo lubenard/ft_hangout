@@ -41,7 +41,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Name" />
+        android:text="@string/name" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Phone number" />
+        android:text="@string/phone_number" />
 
     <EditText
         android:id="@+id/editTextPhone"
@@ -78,7 +78,7 @@
 
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Email" />
+        android:text="@string/email" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
@@ -96,7 +96,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Address" />
+        android:text="@string/address" />
 
     <EditText
         android:id="@+id/editTextTextPostalAddress"
@@ -114,7 +114,7 @@
         android:layout_marginTop="25dp"
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
-        android:text="Birthday" />
+        android:text="@string/birthday" />
 
     <EditText
         android:id="@+id/editTextBirthday"
@@ -124,5 +124,4 @@
         android:hint="01/17/1000"
         android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
         android:inputType="date" />
-
 </LinearLayout>

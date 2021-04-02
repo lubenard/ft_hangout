@@ -96,7 +96,7 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
             @Override
             public void onClick(View view) {
                 Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
-                if (dataModel.getPhoneNumber() != null || !dataModel.getPhoneNumber().isEmpty()) {
+                if (dataModel.getPhoneNumber() != null && !dataModel.getPhoneNumber().isEmpty()) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
                     getContext().startActivity(intent);
