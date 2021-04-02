@@ -29,4 +29,5 @@
     <string name="select_or_take_picture">Select or take a new Picture</string>
     <string name="select_picture">Select Picture</string>
     <string name="allow_camera">If you want to be able to take picture with the camera, please allow it</string>
+    <string name="impossible_call_no_phone_number">Impossible to call the contact. No phone number has been saved.</string>
 </resources>
