@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.Preference;
 
+import com.lubenard.ft_hangouts.Utils.Utils;
+
 import java.util.Locale;
 
 /**
@@ -46,14 +48,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 Log.d(TAG, "Language value has changed for " + newValue);
                 switch (newValue.toString()) {
                     case "en":
-                        setAppLocale("en-us");
+                        Utils.setAppLocale(getContext(),"en-us");
                         break;
                     case "fr":
-                        setAppLocale("fr");
+                        Utils.setAppLocale(getContext(), "fr");
                         break;
                     case "system":
+                        Utils.setAppLocale(getContext(), Resources.getSystem().getConfiguration().locale.getLanguage());
                         break;
                 }
+                restartActivity();
                 return true;
             }
         });
@@ -92,9 +96,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     case "default":
                         ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6200EE")));
                         break;
-                    case "white":
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
-                        break;
                     case "black":
                         ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
                         break;
@@ -128,19 +129,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     public static void restartActivity() {
         activity.recreate();
-    }
-
-    private final void setAppLocale(String localeCode) {
-        Locale myLocale = new Locale(localeCode);
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        SettingsFragment fragment = new SettingsFragment();
-        fragmentTransaction.replace(android.R.id.content, fragment);
-        fragmentTransaction.commit();
     }
 }

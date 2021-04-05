@@ -7,6 +7,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +17,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
+
+import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -116,6 +123,59 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void checkConfig() {
+        String theme_option = sharedPreferences.getString("ui_theme", "dark");
+        switch (theme_option) {
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case "white":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "battery_saver":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+                break;
+            case "system":
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
+
+        String language_option = sharedPreferences.getString("ui_language", "system");
+        switch (language_option) {
+            case "en":
+                Utils.setAppLocale(this, "en-us");
+                break;
+            case "fr":
+                Utils.setAppLocale(this, "fr");
+                break;
+            case "system":
+                Utils.setAppLocale(this, Resources.getSystem().getConfiguration().locale.getLanguage());
+                break;
+        }
+
+        String header_option = sharedPreferences.getString("ui_header_color", "default");
+        switch (header_option.toString()) {
+            case "default":
+                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6200EE")));
+                break;
+            case "white":
+                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
+                break;
+            case "black":
+                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
+                break;
+            case "blue":
+                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3366FF")));
+                break;
+            case "red":
+                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6666")));
+                break;
+            case "green":
+                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33CCgit 33")));
+                break;
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -131,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        checkConfig();
         createNotifChannel();
         checkOrRequestPerm(this, this, Manifest.permission.RECEIVE_SMS, () -> {
             return null;
