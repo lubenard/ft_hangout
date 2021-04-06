@@ -55,9 +55,13 @@ public class ContactDetails extends Fragment {
         callContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
-                getContext().startActivity(intent);
+                if (contactDetails.get(1) != null && !contactDetails.get(1).isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
+                    getContext().startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
+                }
             }
         });
 

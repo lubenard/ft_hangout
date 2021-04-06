@@ -1,8 +1,11 @@
 package com.lubenard.ft_hangouts;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -12,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -23,6 +27,7 @@ import android.view.View;
 
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ public class MainFragment extends Fragment {
     private DbManager dbManager;
     private CustomListAdapter adapter;
     private ListView listView;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +68,8 @@ public class MainFragment extends Fragment {
         dataModels = new ArrayList<>();
 
         dbManager = new DbManager(getContext());
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         listView.setOnItemClickListener((adapterView, view1, i, l) -> {
             ContactModel dataModel = dataModels.get(i);
@@ -106,13 +114,33 @@ public class MainFragment extends Fragment {
                         .replace(android.R.id.content, new SettingsFragment(), null)
                         .addToBackStack(null).commit();
                 return true;
+            case R.id.action_filter:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Filter by");
+                final View customLayout = getLayoutInflater().inflate(R.layout.custom_filter_alertdialog, null);
+                builder.setView(customLayout);
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sharedPreferences.edit().putBoolean("sort_filter_system_contacts", ((CheckBox)customLayout.findViewById(R.id.show_system_contacts)).isChecked()).apply();
+                        sharedPreferences.edit().putBoolean("sort_filter_internal_contacts", ((CheckBox)customLayout.findViewById(R.id.show_internal_contacts)).isChecked()).apply();
+                        sharedPreferences.edit().putBoolean("sort_filter_fav_contacts", ((CheckBox)customLayout.findViewById(R.id.show_fav_contacts)).isChecked()).apply();
+                        updateContactList();
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel,null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void updateContactList() {
         dataModels.clear();
-        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList();
+        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList(sharedPreferences.getBoolean("sort_filter_internal_contacts", true),
+                sharedPreferences.getBoolean("sort_filter_system_contacts",
+                sharedPreferences.getBoolean("sort_filter_fav_contacts", true)), true);
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
         }

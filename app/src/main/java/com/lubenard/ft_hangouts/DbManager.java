@@ -32,6 +32,7 @@ public class DbManager extends SQLiteOpenHelper {
     private static final String contactsTableBirthdate = "contactBirthdate";
     private static final String contactsTableIconPath = "contactsIconPath";
     private static final String contactsTableOrigin = "contactsOrigin";
+    private static final String contactsTableIsFavourite = "contactsIsFavourite";
 
     private static final String messagesTable = "messages";
     private static final String messageTableId = "id";
@@ -57,7 +58,7 @@ public class DbManager extends SQLiteOpenHelper {
         // Create apps table
         db.execSQL("CREATE TABLE " + contactsTable + " (" + contactsTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + contactsTableName + " TEXT, "
                 + contactsTablePhoneNumber + " TEXT, " + contactsTableParsedPhoneNumber + " INTEGER, " + contactsTableEmail + " TEXT, "  + contactsTableAddress + " TEXT, "
-                + contactsTableBirthdate + " TEXT, "  + contactsTableIconPath + " TEXT, " + contactsTableOrigin  +" TEXT)");
+                + contactsTableBirthdate + " TEXT, "  + contactsTableIconPath + " TEXT, " + contactsTableIsFavourite + " INTEGER, " + contactsTableOrigin  +" TEXT)");
 
         db.execSQL("CREATE TABLE " + messagesTable + " (" + messageTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + messageTableContactId + " INTEGER, "
                 + messageTableContent + " TEXT, "  + messageTableDirection + " TEXT)");
@@ -115,11 +116,38 @@ public class DbManager extends SQLiteOpenHelper {
      * Get the contact list for a the main List
      * @return The datas fetched from the DB as a LinkedHashMap
      */
-    public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList() {
+    public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList(boolean getInternal, boolean getSystem, boolean getFavs) {
         LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
 
+        String whereSelection = null;
+        String[] whereArgs = null;
+
+        if (getInternal && getSystem && getFavs) {
+            whereSelection = null;
+            whereArgs = null;
+        } else if (getInternal && !getSystem && !getFavs) {
+            whereSelection = contactsTableOrigin + "=? ";
+            whereArgs = new String[]{"INTERNAL"};
+        } else if (getSystem && !getInternal && !getFavs) {
+            whereSelection = contactsTableOrigin + "=? ";
+            whereArgs = new String[]{"SYSTEM"};
+        } else if (getFavs && !getInternal && !getSystem) {
+            whereSelection = contactsTableIsFavourite + "=? ";
+            whereArgs = new String[]{"1"};
+        } else if (getInternal && getSystem && !getFavs) {
+            whereSelection = contactsTableOrigin + "=? " + " OR " + contactsTableOrigin + " =? ";
+            whereArgs = new String[]{"SYSTEM", "INTERNAL"};
+        } else if (getInternal && getFavs && !getSystem) {
+            whereSelection = contactsTableOrigin + "=? " + " OR " + contactsTableIsFavourite + " =? ";
+            whereArgs = new String[]{"INTERNAL", "1"};
+        } else if (getSystem && getFavs && !getInternal) {
+            whereSelection = contactsTableOrigin + "=? " + " OR " + contactsTableIsFavourite + " =? ";
+            whereArgs = new String[]{"SYSTEM", "1"};
+        }
+
         String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableIconPath};
-        Cursor cursor = readableDB.query(contactsTable,  columns, null, null, null, null, null);
+        Cursor cursor = readableDB.query(contactsTable,  columns, whereSelection,
+                whereArgs, null, null, null);
 
         while (cursor.moveToNext()) {
             contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),
