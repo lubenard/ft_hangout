@@ -1,7 +1,9 @@
 package com.lubenard.ft_hangouts;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +46,7 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(R.string.app_title);
+
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
@@ -85,8 +89,6 @@ public class MainFragment extends Fragment {
                     .setIcon(android.R.drawable.ic_dialog_alert).show();
             return false;
         });
-
-        //((AppCompatActivity)getActivity()).getSupportActionBar();
     }
 
     @Override

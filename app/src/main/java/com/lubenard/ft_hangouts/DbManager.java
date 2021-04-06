@@ -31,6 +31,7 @@ public class DbManager extends SQLiteOpenHelper {
     private static final String contactsTableAddress = "contactAddress";
     private static final String contactsTableBirthdate = "contactBirthdate";
     private static final String contactsTableIconPath = "contactsIconPath";
+    private static final String contactsTableOrigin = "contactsOrigin";
 
     private static final String messagesTable = "messages";
     private static final String messageTableId = "id";
@@ -56,7 +57,7 @@ public class DbManager extends SQLiteOpenHelper {
         // Create apps table
         db.execSQL("CREATE TABLE " + contactsTable + " (" + contactsTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + contactsTableName + " TEXT, "
                 + contactsTablePhoneNumber + " TEXT, " + contactsTableParsedPhoneNumber + " INTEGER, " + contactsTableEmail + " TEXT, "  + contactsTableAddress + " TEXT, "
-                + contactsTableBirthdate + " TEXT, "  + contactsTableIconPath+ " TEXT)");
+                + contactsTableBirthdate + " TEXT, "  + contactsTableIconPath + " TEXT, " + contactsTableOrigin  +" TEXT)");
 
         db.execSQL("CREATE TABLE " + messagesTable + " (" + messageTableId + " INTEGER PRIMARY KEY AUTOINCREMENT, " + messageTableContactId + " INTEGER, "
                 + messageTableContent + " TEXT, "  + messageTableDirection + " TEXT)");
@@ -88,7 +89,6 @@ public class DbManager extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)}, null, null, null);
 
         cursor.moveToFirst();
-        //Log.d(TAG, "cursor = " + cursor.getString(cursor.getColumnIndex(contactsTableName)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableName)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableEmail)));
@@ -125,7 +125,6 @@ public class DbManager extends SQLiteOpenHelper {
             contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),
                     cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)),
                     cursor.getString(cursor.getColumnIndex(contactsTableEmail)),  cursor.getString(cursor.getColumnIndex(contactsTableIconPath))));
-            //Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + " and value " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
         }
         cursor.close();
         return contactDatas;
@@ -140,7 +139,7 @@ public class DbManager extends SQLiteOpenHelper {
      * @param address postal contact address
      * @param birthday contact birthday
      */
-    public void createNewContact(String name, String phoneNumber, String email, String address, String birthday, String iconPath) {
+    public void createNewContact(String name, String phoneNumber, String email, String address, String birthday, String iconPath, String origin) {
         ContentValues cv = new ContentValues();
         cv.put(contactsTableName, name);
         cv.put(contactsTablePhoneNumber, phoneNumber);
@@ -149,6 +148,7 @@ public class DbManager extends SQLiteOpenHelper {
         cv.put(contactsTableAddress, address);
         cv.put(contactsTableBirthdate, birthday);
         cv.put(contactsTableIconPath, iconPath);
+        cv.put(contactsTableOrigin, origin);
 
         writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
     }

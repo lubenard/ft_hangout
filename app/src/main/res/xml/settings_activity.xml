@@ -45,8 +45,7 @@
             android:key="tweaks_create_new_contact_when_unknown_number"
             android:title="@string/option_create_contact_from_unknown" />
 
-        <SwitchPreference
-            android:defaultValue="false"
+        <Preference
             android:key="tweaks_integrate_system_contacts"
             android:title="@string/option_integrate_system_settings" />
     </PreferenceCategory>

@@ -123,7 +123,7 @@ public class EditContact extends Fragment {
                 String birthday = ((EditText)view.findViewById(R.id.editTextBirthday)).getText().toString();
 
                 if (contactId == -1)
-                    dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage);
+                    dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage, "INTERNAL");
                 else
                     dbManager.updateContact(contactId, name, phoneNumber, email, address, birthday, iconImage);
 
@@ -159,13 +159,14 @@ public class EditContact extends Fragment {
             filename = new SimpleDateFormat("/dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".jpg";
 
             Uri selectedImageUri = data.getData();
-            Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
             Log.d("EditContact", "file path = " + getContext().getFilesDir().getAbsolutePath() + filename);
 
             iconImage = getContext().getFilesDir().getAbsolutePath() + filename;
 
             imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imagePicker.setImageDrawable(Drawable.createFromPath(getContext().getFilesDir().getAbsolutePath() + filename));
+
+            Utils.writeFileOnInternalStorage(getContext(), filename, selectedImageUri);
         }
     }
 }

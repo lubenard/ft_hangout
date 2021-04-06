@@ -40,7 +40,7 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
 
                 String contactName = dbManager.getContactNameFromPhoneNumber(messages[i].getOriginatingAddress());
                 if (preferences.getBoolean("tweaks_create_new_contact_when_unknown_number", false) && contactName == null) {
-                    dbManager.createNewContact(messages[i].getOriginatingAddress(), messages[i].getOriginatingAddress(), null, null, null, null);
+                    dbManager.createNewContact(messages[i].getOriginatingAddress(), messages[i].getOriginatingAddress(), null, null, null, null, "INTERNAL");
                 }
 
                 dbManager.saveNewMessage(dbManager.getContactIdFromPhoneNumber(messages[i].getOriginatingAddress()), messages[i].getMessageBody(),"FROM");
