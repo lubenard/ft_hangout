@@ -85,7 +85,8 @@ public class DbManager extends SQLiteOpenHelper {
     public ArrayList<String> getContactDetail(int id) {
         ArrayList<String> contactDatas = new ArrayList<>();
 
-        String[] columns = new String[]{contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableAddress, contactsTableBirthdate, contactsTableIconPath};
+        String[] columns = new String[]{contactsTableName, contactsTablePhoneNumber, contactsTableEmail,
+                contactsTableAddress, contactsTableBirthdate, contactsTableIconPath, contactsTableIsFavourite};
         Cursor cursor = readableDB.query(contactsTable, columns,contactsTableId + "=?",
                 new String[]{String.valueOf(id)}, null, null, null);
 
@@ -96,8 +97,7 @@ public class DbManager extends SQLiteOpenHelper {
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableAddress)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableBirthdate)));
         contactDatas.add(cursor.getString(cursor.getColumnIndex(contactsTableIconPath)));
-        Log.d(TAG, "getStatApp adding " + cursor.getString(cursor.getColumnIndex(contactsTableName)) + ", " + cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)));
-        Log.d(TAG, "Columns array is = " + Arrays.toString(cursor.getColumnNames()));
+        contactDatas.add(String.valueOf(cursor.getInt(cursor.getColumnIndex(contactsTableIsFavourite))));
         cursor.close();
         return contactDatas;
     }
@@ -145,14 +145,16 @@ public class DbManager extends SQLiteOpenHelper {
             whereArgs = new String[]{"SYSTEM", "1"};
         }
 
-        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableIconPath};
+        Log.d("DBMananager", "getFavs is " + getFavs);
+        String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableIconPath, contactsTableIsFavourite};
         Cursor cursor = readableDB.query(contactsTable,  columns, whereSelection,
-                whereArgs, null, null, null);
+                whereArgs, null, null, (getFavs) ? contactsTableIsFavourite + " DESC": null);
 
         while (cursor.moveToNext()) {
             contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),
                     cursor.getString(cursor.getColumnIndex(contactsTableName)), cursor.getString(cursor.getColumnIndex(contactsTablePhoneNumber)),
-                    cursor.getString(cursor.getColumnIndex(contactsTableEmail)),  cursor.getString(cursor.getColumnIndex(contactsTableIconPath))));
+                    cursor.getString(cursor.getColumnIndex(contactsTableEmail)),  cursor.getString(cursor.getColumnIndex(contactsTableIconPath)),
+                    cursor.getInt(cursor.getColumnIndex(contactsTableIsFavourite))));
         }
         cursor.close();
         return contactDatas;
@@ -208,6 +210,17 @@ public class DbManager extends SQLiteOpenHelper {
             cv.put(contactsTableAddress, address);
             cv.put(contactsTableBirthdate, birthday);
             cv.put(contactsTableIconPath, iconPath);
+            writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+        }
+    }
+
+    public void updateContactIsFavourite(int id, String newStatus) {
+        ContentValues cv = new ContentValues();
+        cv.put(contactsTableIsFavourite, Integer.parseInt(newStatus));
+        int u = writableDB.update(contactsTable, cv, contactsTableId + "=?", new String[]{String.valueOf(id)});
+        if (u == 0) {
+            Log.d(TAG, "updateContact: update does not seems to work, insert data: (for id=" + id);
+            cv.put(contactsTableIsFavourite, Integer.parseInt(newStatus));
             writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
         }
     }

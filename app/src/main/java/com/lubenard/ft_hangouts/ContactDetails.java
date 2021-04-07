@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,33 +52,40 @@ public class ContactDetails extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         Button callContact = view.findViewById(R.id.details_call);
-        callContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (contactDetails.get(1) != null && !contactDetails.get(1).isEmpty()) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
-                    getContext().startActivity(intent);
-                } else {
-                    Toast.makeText(getContext(), R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
-                }
+        callContact.setOnClickListener(view13 -> {
+            if (contactDetails.get(1) != null && !contactDetails.get(1).isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
+                getContext().startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
             }
         });
 
         Button messageContact = view.findViewById(R.id.details_message);
-        messageContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MessageFragment fragment = new MessageFragment();
-                Bundle args = new Bundle();
-                args.putInt("contactId", contactId);
-                fragment.setArguments(args);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, fragment, null)
-                        .addToBackStack(null).commit();
+        messageContact.setOnClickListener(view12 -> {
+            MessageFragment fragment = new MessageFragment();
+            Bundle args = new Bundle();
+            args.putInt("contactId", contactId);
+            fragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment, null)
+                    .addToBackStack(null).commit();
+        });
+
+        ImageButton favButton = view.findViewById(R.id.image_button_fav_contact);
+
+        favButton.setOnClickListener(view1 -> {
+            if (contactDetails.get(6).equals("1")) {
+                favButton.setBackgroundResource(R.drawable.baseline_favorite_border_24);
+                contactDetails.set(6, "0");
+
+            } else {
+                favButton.setBackgroundResource(R.drawable.baseline_favorite_24);
+                contactDetails.set(6, "1");
             }
+            dbManager.updateContactIsFavourite(contactId, contactDetails.get(6));
         });
     }
 
@@ -127,12 +136,7 @@ public class ContactDetails extends Fragment {
             TextView birthday = view.findViewById(R.id.contact_detail_birthday);
             ImageView icon = view.findViewById(R.id.contact_detail_icon);
 
-            // If the contact has a name, show it as Activity title.
-            // Else, show the phoneNumber
-            if (contactDetails.get(0) != null)
-               getActivity().setTitle(contactDetails.get(0));
-            else
-                getActivity().setTitle(contactDetails.get(1));
+            getActivity().setTitle("");
 
             name.setText(contactDetails.get(0));
             phoneNumber.setText(contactDetails.get(1));
@@ -144,6 +148,14 @@ public class ContactDetails extends Fragment {
                 icon.setImageDrawable(Drawable.createFromPath(contactDetails.get(5)));
             else
                 icon.setImageDrawable(getContext().getResources().getDrawable(android.R.drawable.ic_menu_help));
+
+            ImageButton favButton = view.findViewById(R.id.image_button_fav_contact);
+
+             if (contactDetails.get(6).equals("1")) {
+                favButton.setBackgroundResource(R.drawable.baseline_favorite_24);
+            } else {
+                favButton.setBackgroundResource(R.drawable.baseline_favorite_border_24);
+            }
         }
         else {
             // trigger error, show toast and exit

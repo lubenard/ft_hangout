@@ -82,6 +82,8 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         result.startAnimation(animation);
         lastPosition = position;*/
 
+        if (dataModel.getIsFavourite())
+            viewHolder.contactName.setTextColor(getContext().getResources().getColor(R.color.yellow));
         viewHolder.contactName.setText(dataModel.getName());
 
         // If no phoneNumber is supplied, print the email, else show a text saying the contact is empty

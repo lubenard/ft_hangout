@@ -32,6 +32,8 @@
             android:id="@+id/custom_view_contactName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="15dp"
             android:layout_marginTop="10dp"
             android:text="Contact_name"
             android:layout_marginLeft="10dp"
