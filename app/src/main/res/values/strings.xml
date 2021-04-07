@@ -54,4 +54,5 @@
     <string name="settings_ui_header_color_red">Red</string>
     <string name="settings_ui_header_color_green">Green</string>
     <string name="action_filter">Sort by</string>
+    <string name="filter_by">Filter by</string>
 </resources>

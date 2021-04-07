@@ -22,13 +22,11 @@ public class MessageFragment extends Fragment {
 
     private int contactId;
     private DbManager dbManager;
-    private View view;
-    private Toolbar toolbar;
 
     private ArrayList<MessageModel> dataModels;
     private CustomMessageListAdapter adapter;
     private ListView listView;
-    private ImageButton sendMessage;
+    private ArrayList<String> contactDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,60 +38,39 @@ public class MessageFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Bundle bundle = this.getArguments();
+        contactId = bundle.getInt("contactId", -1);
+
+        dbManager = new DbManager(getContext());
+
+        if (contactId == -1)
+            getActivity().setTitle(R.string.message_new_contact_title);
+        else {
+            contactDetails = dbManager.getContactDetail(contactId);
+            getActivity().setTitle(contactDetails.get(0));
+        }
+
         EditText messageContent = view.findViewById(R.id.editTextMessageContent);
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        dbManager = new DbManager(getContext());
-        this.view = view;
-
-        Bundle bundle = this.getArguments();
-        contactId = bundle.getInt("contactId", -1);
 
         dataModels = new ArrayList<>();
 
         listView = view.findViewById(R.id.message_list);
 
-        sendMessage = view.findViewById(R.id.sendMessageImageButton);
-
-        if (contactId == -1)
-            toolbar.setTitle(R.string.message_new_contact_title);
-        else {
-            ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
-            getActivity().setTitle(contactDetails.get(0));
-        }
-
-        /*toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.action_call:
-
-                    return true;
-                default:
-                    return false;
-            }
-        });*/
-
-        sendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage("(555) 521-5556", null, messageContent.getText().toString(), null, null);
-                    Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
-                    long insertedMessageId = dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
-
-                    // We do not update all messages. If there is too much messages, that could take a while
-                    //dataModels.add(new MessageModel(insertedMessageId, contactId, messageContent.getText().toString(), "TO"));
-                    //adapter.notifyDataSetChanged();
-                    messageContent.setText("");
-                    updateMessageList();
-                    return null;
-                }, () -> {
-                    Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
-                    return null;
-                });
-            }
-        });
+        ImageButton sendMessage = view.findViewById(R.id.sendMessageImageButton);
+        sendMessage.setOnClickListener(view1 -> MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(contactDetails.get(0), null, messageContent.getText().toString(), null, null);
+            Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
+            dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
+            messageContent.setText("");
+            updateMessageList();
+            return null;
+        }, () -> {
+            Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
+            return null;
+        }));
     }
 
     @Override

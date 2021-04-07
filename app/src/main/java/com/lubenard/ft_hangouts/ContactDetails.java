@@ -1,12 +1,13 @@
 package com.lubenard.ft_hangouts;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,8 +22,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 
@@ -30,8 +31,17 @@ public class ContactDetails extends Fragment {
 
     private int contactId = -1;
     private DbManager dbManager;
-    private View view;
-    ArrayList<String> contactDetails;
+    private ArrayList<String> contactDetails;
+    private Context context;
+    private Activity activity;
+    private FragmentManager fragmentManager;
+    private TextView name;
+    private TextView phoneNumber;
+    private TextView email;
+    private TextView address;
+    private TextView birthday;
+    private ImageView icon;
+    private ImageButton favButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,43 +54,54 @@ public class ContactDetails extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        dbManager = new DbManager(getContext());
-        this.view = view;
+        context = getContext();
+        activity = getActivity();
+        fragmentManager = getActivity().getSupportFragmentManager();
+
+        dbManager = new DbManager(context);
 
         Bundle bundle = this.getArguments();
         contactId = bundle.getInt("contactId", -1);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.setTitle("");
+
+        ((AppCompatActivity)activity).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        name = view.findViewById(R.id.contact_detail_name);
+        phoneNumber = view.findViewById(R.id.contact_detail_phone_number);
+        email = view.findViewById(R.id.contact_detail_email);
+        address = view.findViewById(R.id.contact_detail_address);
+        birthday = view.findViewById(R.id.contact_detail_birthday);
+        icon = view.findViewById(R.id.contact_detail_icon);
+        favButton = view.findViewById(R.id.image_button_fav_contact);
 
         Button callContact = view.findViewById(R.id.details_call);
+        Button messageContact = view.findViewById(R.id.details_message);
+
         callContact.setOnClickListener(view13 -> {
             if (contactDetails.get(1) != null && !contactDetails.get(1).isEmpty()) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
-                getContext().startActivity(intent);
+                context.startActivity(intent);
             } else {
-                Toast.makeText(getContext(), R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
             }
         });
 
-        Button messageContact = view.findViewById(R.id.details_message);
         messageContact.setOnClickListener(view12 -> {
             MessageFragment fragment = new MessageFragment();
             Bundle args = new Bundle();
             args.putInt("contactId", contactId);
             fragment.setArguments(args);
-            getActivity().getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .replace(android.R.id.content, fragment, null)
                     .addToBackStack(null).commit();
         });
-
-        ImageButton favButton = view.findViewById(R.id.image_button_fav_contact);
 
         favButton.setOnClickListener(view1 -> {
             if (contactDetails.get(6).equals("1")) {
                 favButton.setBackgroundResource(R.drawable.baseline_favorite_border_24);
                 contactDetails.set(6, "0");
-
             } else {
                 favButton.setBackgroundResource(R.drawable.baseline_favorite_24);
                 contactDetails.set(6, "1");
@@ -104,18 +125,16 @@ public class ContactDetails extends Fragment {
                 Bundle args = new Bundle();
                 args.putInt("contactId", contactId);
                 fragment.setArguments(args);
-                getActivity().getSupportFragmentManager().beginTransaction()
+                fragmentManager.beginTransaction()
                         .replace(android.R.id.content, fragment, null)
                         .addToBackStack(null).commit();
                 return true;
             case R.id.action_delete_contact:
-                new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
+                new AlertDialog.Builder(context).setTitle(R.string.alertdialog_delete_contact_title)
                         .setMessage(R.string.alertdialog_delete_contact_body)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dbManager.deleteContact(contactId);
-                                getActivity().getSupportFragmentManager().popBackStackImmediate();
-                            }
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                            dbManager.deleteContact(contactId);
+                            fragmentManager.popBackStackImmediate();
                         })
                         .setNegativeButton(android.R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_alert).show();
@@ -129,14 +148,6 @@ public class ContactDetails extends Fragment {
         super.onResume();
         if (contactId > 0) {
             contactDetails = dbManager.getContactDetail(contactId);
-            TextView name = view.findViewById(R.id.contact_detail_name);
-            TextView phoneNumber = view.findViewById(R.id.contact_detail_phone_number);
-            TextView email = view.findViewById(R.id.contact_detail_email);
-            TextView address = view.findViewById(R.id.contact_detail_address);
-            TextView birthday = view.findViewById(R.id.contact_detail_birthday);
-            ImageView icon = view.findViewById(R.id.contact_detail_icon);
-
-            getActivity().setTitle("");
 
             name.setText(contactDetails.get(0));
             phoneNumber.setText(contactDetails.get(1));
@@ -147,20 +158,14 @@ public class ContactDetails extends Fragment {
             if (contactDetails.get(5) != null)
                 icon.setImageDrawable(Drawable.createFromPath(contactDetails.get(5)));
             else
-                icon.setImageDrawable(getContext().getResources().getDrawable(android.R.drawable.ic_menu_help));
+                icon.setImageDrawable(context.getResources().getDrawable(android.R.drawable.ic_menu_help));
 
-            ImageButton favButton = view.findViewById(R.id.image_button_fav_contact);
-
-             if (contactDetails.get(6).equals("1")) {
-                favButton.setBackgroundResource(R.drawable.baseline_favorite_24);
-            } else {
-                favButton.setBackgroundResource(R.drawable.baseline_favorite_border_24);
-            }
+            favButton.setBackgroundResource(contactDetails.get(6).equals("1") ? R.drawable.baseline_favorite_24 : R.drawable.baseline_favorite_border_24);
         }
         else {
-            // trigger error, show toast and exit
-            Toast.makeText(getContext(), R.string.error_bad_id, Toast.LENGTH_SHORT).show();
-            getActivity().getSupportFragmentManager().popBackStackImmediate();
+            // Trigger error, show toast and exit
+            Toast.makeText(context, R.string.error_bad_id, Toast.LENGTH_SHORT).show();
+            fragmentManager.popBackStackImmediate();
         }
     }
 }

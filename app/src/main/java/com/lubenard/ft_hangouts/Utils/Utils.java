@@ -43,8 +43,4 @@ public class Utils {
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
     }
-
-    public static void copyImageToInternalMemory(){
-        return ;
-    }
 }

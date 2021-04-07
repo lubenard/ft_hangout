@@ -1,6 +1,7 @@
 package com.lubenard.ft_hangouts;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -33,6 +36,8 @@ public class MainFragment extends Fragment {
     private CustomListAdapter adapter;
     private ListView listView;
     private SharedPreferences sharedPreferences;
+    private Context context;
+    private FragmentManager fragmentManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,20 +54,19 @@ public class MainFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewContact();
-            }
-        });
+        fab.setOnClickListener(view13 -> createNewContact());
 
         listView = view.findViewById(R.id.main_list);
 
         dataModels = new ArrayList<>();
 
-        dbManager = new DbManager(getContext());
+        context = getContext();
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        dbManager = new DbManager(context);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        fragmentManager = getActivity().getSupportFragmentManager();
 
         listView.setOnItemClickListener((adapterView, view1, i, l) -> {
             ContactModel dataModel = dataModels.get(i);
@@ -71,19 +75,19 @@ public class MainFragment extends Fragment {
             Bundle args = new Bundle();
             args.putInt("contactId", dataModel.getId());
             fragment.setArguments(args);
-            getActivity().getSupportFragmentManager().beginTransaction()
+            fragmentManager.beginTransaction()
                     .replace(android.R.id.content, fragment, null)
                     .addToBackStack(null).commit();
         });
 
         listView.setOnItemLongClickListener((adapterView, view12, i, l) -> {
             ContactModel dataModel = dataModels.get(i);
-            new AlertDialog.Builder(getContext()).setTitle(R.string.alertdialog_delete_contact_title)
+            new AlertDialog.Builder(context).setTitle(R.string.alertdialog_delete_contact_title)
                     .setMessage(R.string.alertdialog_delete_contact_body)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dbManager.deleteContact(dataModel.getId());
-                            getActivity().getSupportFragmentManager().popBackStackImmediate();
+                            fragmentManager.popBackStackImmediate();
                         }
                     })
                     .setNegativeButton(android.R.string.no, null)
@@ -103,23 +107,28 @@ public class MainFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
-                getActivity().getSupportFragmentManager().beginTransaction()
+                fragmentManager.beginTransaction()
                         .replace(android.R.id.content, new SettingsFragment(), null)
                         .addToBackStack(null).commit();
                 return true;
             case R.id.action_filter:
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Filter by");
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(R.string.filter_by);
                 final View customLayout = getLayoutInflater().inflate(R.layout.custom_filter_alertdialog, null);
                 builder.setView(customLayout);
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sharedPreferences.edit().putBoolean("sort_filter_system_contacts", ((CheckBox)customLayout.findViewById(R.id.show_system_contacts)).isChecked()).apply();
-                        sharedPreferences.edit().putBoolean("sort_filter_internal_contacts", ((CheckBox)customLayout.findViewById(R.id.show_internal_contacts)).isChecked()).apply();
-                        sharedPreferences.edit().putBoolean("sort_filter_fav_contacts", ((CheckBox)customLayout.findViewById(R.id.show_fav_contacts)).isChecked()).apply();
-                        updateContactList();
-                    }
+                CheckBox system_contacts = customLayout.findViewById(R.id.show_system_contacts);
+                CheckBox internal_contacts = customLayout.findViewById(R.id.show_internal_contacts);
+                CheckBox fav_contacts = customLayout.findViewById(R.id.show_fav_contacts);
+
+                system_contacts.setChecked(sharedPreferences.getBoolean("sort_filter_system_contacts", true));
+                internal_contacts.setChecked(sharedPreferences.getBoolean("sort_filter_internal_contacts", true));
+                fav_contacts.setChecked(sharedPreferences.getBoolean("sort_filter_fav_contacts", true));
+
+                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    sharedPreferences.edit().putBoolean("sort_filter_system_contacts", system_contacts.isChecked()).apply();
+                    sharedPreferences.edit().putBoolean("sort_filter_internal_contacts", internal_contacts.isChecked()).apply();
+                    sharedPreferences.edit().putBoolean("sort_filter_fav_contacts", fav_contacts.isChecked()).apply();
+                    updateContactList();
                 });
                 builder.setNegativeButton(android.R.string.cancel,null);
                 AlertDialog dialog = builder.create();
@@ -137,7 +146,7 @@ public class MainFragment extends Fragment {
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
         }
-        adapter = new CustomListAdapter(dataModels, getContext(), getActivity());
+        adapter = new CustomListAdapter(dataModels, context, getActivity());
         listView.setAdapter(adapter);
     }
 
@@ -147,7 +156,7 @@ public class MainFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt("contactId", -1);
         fragment.setArguments(args);
-        getActivity().getSupportFragmentManager().beginTransaction()
+        fragmentManager.beginTransaction()
                 .replace(android.R.id.content, fragment, null)
                 .addToBackStack(null).commit();
     }
