@@ -22,10 +22,9 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         Bundle myBundle = intent.getExtras();
-        SmsMessage [] messages = null;
+        SmsMessage [] messages;
 
-        if (myBundle != null)
-        {
+        if (myBundle != null) {
             Object[] pdus = (Object[]) myBundle.get("pdus");
             messages = new SmsMessage[pdus.length];
 

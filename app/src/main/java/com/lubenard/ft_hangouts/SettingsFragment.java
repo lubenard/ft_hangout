@@ -87,7 +87,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 integrateSystemContacts();
                 return true;
             }, () -> {
-                Toast.makeText(getContext(), "This app need to be able to read your contact to be able to import them", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.permission_denied_red_contacts, Toast.LENGTH_LONG).show();
                 return false;
             });
             return true;
@@ -95,15 +95,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // feedback preference click listener
         Preference myPref = findPreference("other_feedback");
-        myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                        "mailto","lubenard@student.42.fr", null));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contact App");
-                emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
-                startActivity(Intent.createChooser(emailIntent, "Send email..."));
-                return true;
-            }
+        myPref.setOnPreferenceClickListener(preference -> {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                    "mailto","lubenard@student.42.fr", null));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_app));
+            emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_mail)));
+            return true;
         });
     }
 
@@ -158,7 +156,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
         if (cur != null)
             cur.close();
-        Toast.makeText(getContext(), "All systems contacts have been imported", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getContext().getString(R.string.all_system_contacts_imported), Toast.LENGTH_SHORT).show();
     }
 
     public static void restartActivity() {

@@ -12,29 +12,34 @@
         android:layout_marginTop="5dp"
         android:divider="@null"
         android:dividerHeight="15dp"
-        android:layout_weight="10" />
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp">
 
         <EditText
             android:id="@+id/editTextMessageContent"
             android:layout_width="324dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:ems="10"
+            android:layout_marginLeft="10dp"
             android:inputType="textPersonName"
             android:hint="@string/type_your_messsage" />
+
+        <View android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/sendMessageImageButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginRight="11dp"
             android:background="@drawable/send_message_button"
-            android:layout_weight="1"
             android:contentDescription="@string/send_sms"
-            android:src="@drawable/baseline_send_white_24"/>
+            android:src="@drawable/baseline_send_white_24" />
     </LinearLayout>
 </LinearLayout>

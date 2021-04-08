@@ -45,4 +45,20 @@
     <string name="ui">UI</string>
     <string name="other">AUTRES</string>
     <string name="tweaks">AJUSTEMENTS</string>
+    <string name="action_save">Sauvegarder ce contact</string>
+    <string name="ui_header_color_title">Couleur du header</string>
+    <string name="settings_ui_header_color_default">(Défaut) Violet</string>
+    <string name="settings_ui_header_color_black">Noir</string>
+    <string name="settings_ui_header_color_blue">Bleu</string>
+    <string name="settings_ui_header_color_red">Rouge</string>
+    <string name="settings_ui_header_color_green">Vert</string>
+    <string name="action_filter">"Trier par "</string>
+    <string name="filter_by">Filtrer par</string>
+    <string name="system_contacts">Contacts du système</string>
+    <string name="internal_contacts">Contacts internes</string>
+    <string name="fav_conctacts">Contacts favoris</string>
+    <string name="permission_denied_red_contacts">Cette app a besoin de pouvoir lire vos contacts pour pouvoir les importer</string>
+    <string name="all_system_contacts_imported">Tous les contacts du systeme ont été importés</string>
+    <string name="contact_app">Application de contacts</string>
+    <string name="send_mail">Envoyer un mail...</string>
 </resources>

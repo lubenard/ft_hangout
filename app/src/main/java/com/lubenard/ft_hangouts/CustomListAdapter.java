@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 
-public class CustomListAdapter extends ArrayAdapter<ContactModel> implements View.OnClickListener{
+public class CustomListAdapter extends ArrayAdapter<ContactModel> {
 
     private ArrayList<ContactModel> dataSet;
     private Context mContext;
@@ -42,23 +42,11 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
     }
 
     @Override
-    public void onClick(View v) {
-
-        int position=(Integer) v.getTag();
-        Object object= getItem(position);
-        ContactModel dataModel = (ContactModel) object;
-    }
-
-    private int lastPosition = -1;
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         ContactModel dataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
-
-        final View result;
 
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -69,17 +57,8 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
             viewHolder.callButton = convertView.findViewById(R.id.call_contact);
             viewHolder.messageButton = convertView.findViewById(R.id.message_contact);
             viewHolder.contactImageView = convertView.findViewById(R.id.custom_view_contactImage);
-
-            result = convertView;
-            convertView.setTag(viewHolder);
-        } else {
+        } else
             viewHolder = (ViewHolder) convertView.getTag();
-            result = convertView;
-        }
-
-        /*Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-        result.startAnimation(animation);
-        lastPosition = position;*/
 
         if (dataModel.getIsFavourite())
             viewHolder.contactName.setTextColor(getContext().getResources().getColor(R.color.yellow));
@@ -93,32 +72,26 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         else
             viewHolder.contactPhoneNumberEmail.setText(getContext().getString(R.string.no_info_provided));
 
-        viewHolder.callButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
-                if (dataModel.getPhoneNumber() != null && !dataModel.getPhoneNumber().isEmpty()) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
-                    getContext().startActivity(intent);
-                } else {
-                    Toast.makeText(mContext, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
-                }
+        viewHolder.callButton.setOnClickListener(view -> {
+            Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
+            if (dataModel.getPhoneNumber() != null && !dataModel.getPhoneNumber().isEmpty()) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
+                getContext().startActivity(intent);
+            } else {
+                Toast.makeText(mContext, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
             }
         });
 
-        viewHolder.messageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
-                MessageFragment fragment = new MessageFragment();
-                Bundle args = new Bundle();
-                args.putInt("contactId", dataModel.getId());
-                fragment.setArguments(args);
-                activity.getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, fragment, null)
-                        .addToBackStack(null).commit();
-            }
+        viewHolder.messageButton.setOnClickListener(view -> {
+            Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
+            MessageFragment fragment = new MessageFragment();
+            Bundle args = new Bundle();
+            args.putInt("contactId", dataModel.getId());
+            fragment.setArguments(args);
+            activity.getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, fragment, null)
+                    .addToBackStack(null).commit();
         });
 
         viewHolder.contactName.setSelected(true);
@@ -129,10 +102,6 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> implements Vie
         else
             viewHolder.contactImageView.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.ic_menu_help));
 
-        /*viewHolder.txtVersion.setText(dataModel.getVersion_number());
-        viewHolder.info.setOnClickListener(this);
-        viewHolder.info.setTag(position);*/
-        // Return the completed view to render on screen
         return convertView;
     }
 }

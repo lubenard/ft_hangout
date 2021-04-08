@@ -62,7 +62,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-
         android:textSize="20dp"
         android:layout_marginLeft="5dp"
         android:text="@string/email" />
@@ -108,7 +107,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="01/17/1000"
+        android:hint="01/17/2000"
         android:layout_marginHorizontal="@dimen/horizontal_fields_contacts"
         android:inputType="date" />
 </LinearLayout>

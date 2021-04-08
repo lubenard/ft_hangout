@@ -49,10 +49,17 @@
     <string name="action_save">Save this contact</string>
     <string name="ui_header_color_title">Color of header</string>
     <string name="settings_ui_header_color_default">(Default) Purple</string>
-    <string name="settings_ui_header_color_black">Noir</string>
+    <string name="settings_ui_header_color_black">Black</string>
     <string name="settings_ui_header_color_blue">Blue</string>
     <string name="settings_ui_header_color_red">Red</string>
     <string name="settings_ui_header_color_green">Green</string>
     <string name="action_filter">Sort by</string>
     <string name="filter_by">Filter by</string>
+    <string name="system_contacts">System contacts</string>
+    <string name="internal_contacts">Internal contacts</string>
+    <string name="fav_conctacts">Favourite contacts</string>
+    <string name="permission_denied_red_contacts">This app need to be able to read your contact to be able to import them</string>
+    <string name="all_system_contacts_imported">All systems contacts have been imported</string>
+    <string name="contact_app">Contact App</string>
+    <string name="send_mail">Send email...</string>
 </resources>

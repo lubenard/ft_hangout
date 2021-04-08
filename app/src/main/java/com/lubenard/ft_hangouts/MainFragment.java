@@ -23,6 +23,7 @@ import android.view.View;
 
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.net.Inet4Address;
@@ -65,7 +66,7 @@ public class MainFragment extends Fragment {
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
+        ImageButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(view13 -> createNewContact());
 
         listView.setOnItemClickListener((adapterView, view1, i, l) -> {
