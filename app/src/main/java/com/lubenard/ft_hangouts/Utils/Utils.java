@@ -76,6 +76,13 @@ public class Utils {
         }
     }
 
+    public static boolean checkExistantPhoneNumnber(String phoneNumber) {
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     // Very useful https://mkyong.com/java/how-to-write-to-file-in-java-fileoutputstream-example/
     public static void writeFileOnInternalStorage(Context mcoContext, String sFileName, Uri datasUri) {
         try {

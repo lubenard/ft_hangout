@@ -85,11 +85,9 @@ public class MainFragment extends Fragment {
             ContactModel dataModel = dataModels.get(i);
             new AlertDialog.Builder(context).setTitle(R.string.alertdialog_delete_contact_title)
                     .setMessage(R.string.alertdialog_delete_contact_body)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dbManager.deleteContact(dataModel.getId());
-                            fragmentManager.popBackStackImmediate();
-                        }
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        dbManager.deleteContact(dataModel.getId());
+                        fragmentManager.popBackStackImmediate();
                     })
                     .setNegativeButton(android.R.string.no, null)
                     .setIcon(android.R.drawable.ic_dialog_alert).show();

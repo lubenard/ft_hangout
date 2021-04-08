@@ -25,6 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.lubenard.ft_hangouts.Utils.Utils;
+
 import java.util.ArrayList;
 
 public class ContactDetails extends Fragment {
@@ -79,7 +81,7 @@ public class ContactDetails extends Fragment {
         Button messageContact = view.findViewById(R.id.details_message);
 
         callContact.setOnClickListener(view13 -> {
-            if (contactDetails.get(1) != null && !contactDetails.get(1).isEmpty()) {
+            if (Utils.checkExistantPhoneNumnber(contactDetails.get(1))) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
                 context.startActivity(intent);
@@ -89,13 +91,16 @@ public class ContactDetails extends Fragment {
         });
 
         messageContact.setOnClickListener(view12 -> {
-            MessageFragment fragment = new MessageFragment();
-            Bundle args = new Bundle();
-            args.putInt("contactId", contactId);
-            fragment.setArguments(args);
-            fragmentManager.beginTransaction()
-                    .replace(android.R.id.content, fragment, null)
-                    .addToBackStack(null).commit();
+            if (Utils.checkExistantPhoneNumnber(contactDetails.get(1))) {
+                MessageFragment fragment = new MessageFragment();
+                Bundle args = new Bundle();
+                args.putInt("contactId", contactId);
+                fragment.setArguments(args);
+                fragmentManager.beginTransaction()
+                        .replace(android.R.id.content, fragment, null)
+                        .addToBackStack(null).commit();
+            } else
+                Toast.makeText(context, R.string.impossible_message_no_phone_number, Toast.LENGTH_LONG).show();
         });
 
         favButton.setOnClickListener(view1 -> {

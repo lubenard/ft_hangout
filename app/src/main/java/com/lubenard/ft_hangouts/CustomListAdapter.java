@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.lubenard.ft_hangouts.Utils.Utils;
+
 import java.util.ArrayList;
 
 public class CustomListAdapter extends ArrayAdapter<ContactModel> {
@@ -74,24 +76,26 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> {
 
         viewHolder.callButton.setOnClickListener(view -> {
             Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
-            if (dataModel.getPhoneNumber() != null && !dataModel.getPhoneNumber().isEmpty()) {
+            if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
                 getContext().startActivity(intent);
-            } else {
+            } else
                 Toast.makeText(mContext, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
-            }
         });
 
         viewHolder.messageButton.setOnClickListener(view -> {
             Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
-            MessageFragment fragment = new MessageFragment();
-            Bundle args = new Bundle();
-            args.putInt("contactId", dataModel.getId());
-            fragment.setArguments(args);
-            activity.getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, fragment, null)
-                    .addToBackStack(null).commit();
+            if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
+                MessageFragment fragment = new MessageFragment();
+                Bundle args = new Bundle();
+                args.putInt("contactId", dataModel.getId());
+                fragment.setArguments(args);
+                activity.getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, fragment, null)
+                        .addToBackStack(null).commit();
+            } else
+                Toast.makeText(mContext, R.string.impossible_message_no_phone_number, Toast.LENGTH_LONG).show();
         });
 
         viewHolder.contactName.setSelected(true);

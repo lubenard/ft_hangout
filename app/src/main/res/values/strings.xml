@@ -62,4 +62,5 @@
     <string name="all_system_contacts_imported">All systems contacts have been imported</string>
     <string name="contact_app">Contact App</string>
     <string name="send_mail">Send email...</string>
+    <string name="impossible_message_no_phone_number">Impossible to send a message to the contact. No phone number has been saved.</string>
 </resources>

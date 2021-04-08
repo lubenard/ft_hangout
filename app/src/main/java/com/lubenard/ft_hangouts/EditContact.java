@@ -170,10 +170,10 @@ public class EditContact extends Fragment {
 
             iconImage = context.getFilesDir().getAbsolutePath() + filename;
 
+            Utils.writeFileOnInternalStorage(context, filename, selectedImageUri);
+
             imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imagePicker.setImageDrawable(Drawable.createFromPath(context.getFilesDir().getAbsolutePath() + filename));
-
-            Utils.writeFileOnInternalStorage(context, filename, selectedImageUri);
         }
     }
 }
