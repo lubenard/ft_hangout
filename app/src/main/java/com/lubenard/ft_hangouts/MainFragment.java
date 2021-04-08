@@ -39,6 +39,7 @@ public class MainFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private Context context;
     private FragmentManager fragmentManager;
+    private int sorting_value;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,16 +118,20 @@ public class MainFragment extends Fragment {
                 builder.setView(customLayout);
                 CheckBox system_contacts = customLayout.findViewById(R.id.show_system_contacts);
                 CheckBox internal_contacts = customLayout.findViewById(R.id.show_internal_contacts);
-                CheckBox fav_contacts = customLayout.findViewById(R.id.show_fav_contacts);
 
                 system_contacts.setChecked(sharedPreferences.getBoolean("sort_filter_system_contacts", true));
                 internal_contacts.setChecked(sharedPreferences.getBoolean("sort_filter_internal_contacts", true));
-                fav_contacts.setChecked(sharedPreferences.getBoolean("sort_filter_fav_contacts", true));
 
                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    sorting_value = 0;
+                    if (internal_contacts.isChecked())
+                        sorting_value += 1;
+                    if (system_contacts.isChecked())
+                        sorting_value += 2;
+                    Log.d("MainFragment", "Sorting value is " + sorting_value);
+                    sharedPreferences.edit().putInt("sort_filter_value", sorting_value).apply();
                     sharedPreferences.edit().putBoolean("sort_filter_system_contacts", system_contacts.isChecked()).apply();
                     sharedPreferences.edit().putBoolean("sort_filter_internal_contacts", internal_contacts.isChecked()).apply();
-                    sharedPreferences.edit().putBoolean("sort_filter_fav_contacts", fav_contacts.isChecked()).apply();
                     updateContactList();
                 });
                 builder.setNegativeButton(android.R.string.cancel,null);
@@ -139,9 +144,7 @@ public class MainFragment extends Fragment {
 
     private void updateContactList() {
         dataModels.clear();
-        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList(sharedPreferences.getBoolean("sort_filter_internal_contacts", true),
-                sharedPreferences.getBoolean("sort_filter_system_contacts",
-                sharedPreferences.getBoolean("sort_filter_fav_contacts", true)), true);
+        LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList(sorting_value);
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
         }

@@ -116,39 +116,26 @@ public class DbManager extends SQLiteOpenHelper {
      * Get the contact list for a the main List
      * @return The datas fetched from the DB as a LinkedHashMap
      */
-    public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList(boolean getInternal, boolean getSystem, boolean getFavs) {
+    public LinkedHashMap<Integer, ContactModel> getAllContactsForMainList(int sorting_number) {
         LinkedHashMap<Integer, ContactModel> contactDatas = new LinkedHashMap<>();
 
         String whereSelection = null;
         String[] whereArgs = null;
 
-        if (getInternal && getSystem && getFavs) {
-            whereSelection = null;
-            whereArgs = null;
-        } else if (getInternal && !getSystem && !getFavs) {
+        if (sorting_number == 1) {
             whereSelection = contactsTableOrigin + "=? ";
             whereArgs = new String[]{"INTERNAL"};
-        } else if (getSystem && !getInternal && !getFavs) {
+        } else if (sorting_number == 2) {
             whereSelection = contactsTableOrigin + "=? ";
             whereArgs = new String[]{"SYSTEM"};
-        } else if (getFavs && !getInternal && !getSystem) {
-            whereSelection = contactsTableIsFavourite + "=? ";
-            whereArgs = new String[]{"1"};
-        } else if (getInternal && getSystem && !getFavs) {
+        } else if (sorting_number == 3) {
             whereSelection = contactsTableOrigin + "=? " + " OR " + contactsTableOrigin + " =? ";
             whereArgs = new String[]{"SYSTEM", "INTERNAL"};
-        } else if (getInternal && getFavs && !getSystem) {
-            whereSelection = contactsTableOrigin + "=? " + " OR " + contactsTableIsFavourite + " =? ";
-            whereArgs = new String[]{"INTERNAL", "1"};
-        } else if (getSystem && getFavs && !getInternal) {
-            whereSelection = contactsTableOrigin + "=? " + " OR " + contactsTableIsFavourite + " =? ";
-            whereArgs = new String[]{"SYSTEM", "1"};
         }
 
-        Log.d("DBMananager", "getFavs is " + getFavs);
         String[] columns = new String[]{contactsTableId, contactsTableName, contactsTablePhoneNumber, contactsTableEmail, contactsTableIconPath, contactsTableIsFavourite};
         Cursor cursor = readableDB.query(contactsTable,  columns, whereSelection,
-                whereArgs, null, null, (getFavs) ? contactsTableIsFavourite + " DESC": null);
+                whereArgs, null, null, contactsTableIsFavourite + " DESC");
 
         while (cursor.moveToNext()) {
             contactDatas.put(cursor.getInt(cursor.getColumnIndex(contactsTableId)), new ContactModel(cursor.getInt(cursor.getColumnIndex(contactsTableId)),

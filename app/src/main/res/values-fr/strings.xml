@@ -56,7 +56,6 @@
     <string name="filter_by">Filtrer par</string>
     <string name="system_contacts">Contacts du système</string>
     <string name="internal_contacts">Contacts internes</string>
-    <string name="fav_conctacts">Contacts favoris</string>
     <string name="permission_denied_red_contacts">Cette app a besoin de pouvoir lire vos contacts pour pouvoir les importer</string>
     <string name="all_system_contacts_imported">Tous les contacts du systeme ont été importés</string>
     <string name="contact_app">Application de contacts</string>
