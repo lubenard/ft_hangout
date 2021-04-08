@@ -62,4 +62,5 @@
     <string name="contact_app">Contact App</string>
     <string name="send_mail">Send email...</string>
     <string name="impossible_message_no_phone_number">Impossible to send a message to the contact. No phone number has been saved.</string>
+    <string name="cannot_save_contact">The contact cannot be saved. Too few informations</string>
 </resources>

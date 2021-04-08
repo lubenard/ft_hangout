@@ -54,58 +54,56 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.custom_contact_list_element, parent, false);
-            viewHolder.contactName = (TextView) convertView.findViewById(R.id.custom_view_contactName);
-            viewHolder.contactPhoneNumberEmail = (TextView) convertView.findViewById(R.id.custom_view_contactPhoneNumber);
+            viewHolder.contactName = convertView.findViewById(R.id.custom_view_contactName);
+            viewHolder.contactPhoneNumberEmail = convertView.findViewById(R.id.custom_view_contactPhoneNumber);
             viewHolder.callButton = convertView.findViewById(R.id.call_contact);
             viewHolder.messageButton = convertView.findViewById(R.id.message_contact);
             viewHolder.contactImageView = convertView.findViewById(R.id.custom_view_contactImage);
-        } else
-            viewHolder = (ViewHolder) convertView.getTag();
 
-        if (dataModel.getIsFavourite())
-            viewHolder.contactName.setTextColor(getContext().getResources().getColor(R.color.yellow));
-        viewHolder.contactName.setText(dataModel.getName());
+            if (dataModel.getIsFavourite())
+                viewHolder.contactName.setTextColor(getContext().getResources().getColor(R.color.yellow));
+            viewHolder.contactName.setText(dataModel.getName());
 
-        // If no phoneNumber is supplied, print the email, else show a text saying the contact is empty
-        if (!dataModel.getPhoneNumber().isEmpty())
-            viewHolder.contactPhoneNumberEmail.setText(dataModel.getPhoneNumber());
-        else if (!dataModel.getEmail().isEmpty())
-            viewHolder.contactPhoneNumberEmail.setText(dataModel.getEmail());
-        else
-            viewHolder.contactPhoneNumberEmail.setText(getContext().getString(R.string.no_info_provided));
+            // If no phoneNumber is supplied, print the email, else show a text saying the contact is empty
+            if (!dataModel.getPhoneNumber().isEmpty())
+                viewHolder.contactPhoneNumberEmail.setText(dataModel.getPhoneNumber());
+            else if (!dataModel.getEmail().isEmpty())
+                viewHolder.contactPhoneNumberEmail.setText(dataModel.getEmail());
+            else
+                viewHolder.contactPhoneNumberEmail.setText(getContext().getString(R.string.no_info_provided));
 
-        viewHolder.callButton.setOnClickListener(view -> {
-            Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
-            if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
-                getContext().startActivity(intent);
-            } else
-                Toast.makeText(mContext, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
-        });
+            viewHolder.callButton.setOnClickListener(view -> {
+                Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
+                if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
+                    getContext().startActivity(intent);
+                } else
+                    Toast.makeText(mContext, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
+            });
 
-        viewHolder.messageButton.setOnClickListener(view -> {
-            Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
-            if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
-                MessageFragment fragment = new MessageFragment();
-                Bundle args = new Bundle();
-                args.putInt("contactId", dataModel.getId());
-                fragment.setArguments(args);
-                activity.getSupportFragmentManager().beginTransaction()
-                        .replace(android.R.id.content, fragment, null)
-                        .addToBackStack(null).commit();
-            } else
-                Toast.makeText(mContext, R.string.impossible_message_no_phone_number, Toast.LENGTH_LONG).show();
-        });
+            viewHolder.messageButton.setOnClickListener(view -> {
+                Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
+                if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
+                    MessageFragment fragment = new MessageFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("contactId", dataModel.getId());
+                    fragment.setArguments(args);
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .replace(android.R.id.content, fragment, null)
+                            .addToBackStack(null).commit();
+                } else
+                    Toast.makeText(mContext, R.string.impossible_message_no_phone_number, Toast.LENGTH_LONG).show();
+            });
 
-        viewHolder.contactName.setSelected(true);
-        viewHolder.contactPhoneNumberEmail.setSelected(true);
+            viewHolder.contactName.setSelected(true);
+            viewHolder.contactPhoneNumberEmail.setSelected(true);
 
-        if (dataModel.getContactImage() != null)
-            viewHolder.contactImageView.setImageDrawable(Drawable.createFromPath(dataModel.getContactImage()));
-        else
-            viewHolder.contactImageView.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.ic_menu_help));
-
+            if (dataModel.getContactImage() != null)
+                viewHolder.contactImageView.setImageDrawable(Drawable.createFromPath(dataModel.getContactImage()));
+            else
+                viewHolder.contactImageView.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.ic_menu_help));
+        }
         return convertView;
     }
 }

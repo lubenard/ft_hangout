@@ -130,6 +130,16 @@ public class EditContact extends Fragment {
                 String address = postalAddress.getText().toString();
                 String birthday = birthdayDate.getText().toString();
 
+                if (name.isEmpty() && phoneNumber.isEmpty() && email.isEmpty()) {
+                    Toast.makeText(context, R.string.cannot_save_contact, Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+                if (name.isEmpty() && !phoneNumber.isEmpty())
+                    name = phoneNumber;
+                else if (name.isEmpty() && phoneNumber.isEmpty() && !email.isEmpty())
+                    name = email;
+
                 if (contactId == -1)
                     dbManager.createNewContact(name, phoneNumber, email, address, birthday, iconImage, "INTERNAL");
                 else
