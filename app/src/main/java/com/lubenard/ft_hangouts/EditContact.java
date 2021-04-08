@@ -1,6 +1,7 @@
 package com.lubenard.ft_hangouts;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,6 +42,7 @@ public class EditContact extends Fragment {
     private DbManager dbManager;
     private ImageButton imagePicker;
     private String iconImage = null;
+    private Activity activity;
     private Context context;
 
     private EditText personName;
@@ -60,14 +62,16 @@ public class EditContact extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        activity = getActivity();
         context = getContext();
         dbManager = new DbManager(context);
 
         Bundle bundle = this.getArguments();
         contactId = bundle.getInt("contactId", -1);
 
-        imagePicker = view.findViewById(R.id.imagePicker);
+        ((AppCompatActivity)activity).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        imagePicker = view.findViewById(R.id.imagePicker);
         personName = view.findViewById(R.id.editTextTextPersonName);
         phone = view.findViewById(R.id.editTextPhone);
         emailAddress = view.findViewById(R.id.editTextTextEmailAddress);
@@ -75,9 +79,9 @@ public class EditContact extends Fragment {
         birthdayDate = view.findViewById(R.id.editTextBirthday);
 
         if (contactId == -1)
-            getActivity().setTitle(R.string.app_create_contact_name);
+            activity.setTitle(R.string.app_create_contact_name);
         else {
-            getActivity().setTitle(R.string.app_edit_contact_name);
+            activity.setTitle(R.string.app_edit_contact_name);
             ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
             // Load datas into the fields
             personName.setText(contactDetails.get(0));
@@ -87,28 +91,23 @@ public class EditContact extends Fragment {
             birthdayDate.setText(contactDetails.get(4));
         }
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        imagePicker.setOnClickListener(view1 -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            String pickTitle = getString(R.string.select_or_take_picture);
+            Intent chooserIntent = Intent.createChooser(intent, pickTitle);
+            MainActivity.checkOrRequestPerm(activity, context, Manifest.permission.CAMERA, () -> {
+                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePhotoIntent });
+                startActivityForResult(Intent.createChooser(chooserIntent, getString(R.string.select_picture)), 1);
+                return null;
 
-        imagePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                String pickTitle = getString(R.string.select_or_take_picture);
-                Intent chooserIntent = Intent.createChooser(intent, pickTitle);
-                MainActivity.checkOrRequestPerm(getActivity(), context, Manifest.permission.CAMERA, () -> {
-                    Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { takePhotoIntent });
-                    startActivityForResult(Intent.createChooser(chooserIntent, getString(R.string.select_picture)), 1);
-                    return null;
-
-                }, () -> {
-                    Toast.makeText(context, context.getString(R.string.allow_camera), Toast.LENGTH_LONG).show();
-                    startActivityForResult(Intent.createChooser(chooserIntent, getString(R.string.select_picture)), 1);
-                    return null;
-                });
-            }
+            }, () -> {
+                Toast.makeText(context, context.getString(R.string.allow_camera), Toast.LENGTH_LONG).show();
+                startActivityForResult(Intent.createChooser(chooserIntent, getString(R.string.select_picture)), 1);
+                return null;
+            });
         });
     }
 
@@ -153,7 +152,6 @@ public class EditContact extends Fragment {
 
             iconImage = context.getFilesDir().getAbsolutePath() + filename;
 
-            Log.d("EditContact", "file path = " + iconImage);
             try {
                 photo.compress(Bitmap.CompressFormat.JPEG, 90, new FileOutputStream(iconImage));
             } catch (FileNotFoundException e) {
@@ -163,8 +161,8 @@ public class EditContact extends Fragment {
             imagePicker.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imagePicker.setImageBitmap(photo);
         }
-
         if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
+            Log.d("EditContact", "Pic took from files");
             filename = new SimpleDateFormat("/dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".jpg";
 
             Uri selectedImageUri = data.getData();

@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //new AlertDialog.Builder(context).setTitle(context.getResources().getString(R.string.alertdialog_perm_not_granted_title))
-                //   .setMessage(context.getResources().getString(R.string.alertdialog_perm_not_granted_desc)).setPositiveButton(context.getResources().getString(R.));
                 return false;
             } else {
                 // You can directly ask for the permission.
@@ -100,15 +98,13 @@ public class MainActivity extends AppCompatActivity {
                     // system settings in an effort to convince the user to change
                     // their decision.
                     try {
-                        onPermissionSuccess.call();
+                        onPermissionError.call();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 return;
         }
-        // Other 'case' lines to check for other
-        // permissions this app might request.
     }
 
     private void createNotifChannel() {
@@ -129,55 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkConfig() {
         String theme_option = sharedPreferences.getString("ui_theme", "dark");
-        switch (theme_option) {
-            case "dark":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case "white":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case "battery_saver":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                break;
-            case "system":
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-        }
+        Utils.applyTheme(theme_option);
 
         String language_option = sharedPreferences.getString("ui_language", "system");
-        switch (language_option) {
-            case "en":
-                Utils.setAppLocale(this, "en-us");
-                break;
-            case "fr":
-                Utils.setAppLocale(this, "fr");
-                break;
-            case "system":
-                Utils.setAppLocale(this, Resources.getSystem().getConfiguration().locale.getLanguage());
-                break;
-        }
+        Utils.applyLanguage(this, language_option.toString());
 
         String header_option = sharedPreferences.getString("ui_header_color", "default");
-        switch (header_option.toString()) {
-            case "default":
-                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6200EE")));
-                break;
-            case "white":
-                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FFFFFF")));
-                break;
-            case "black":
-                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
-                break;
-            case "blue":
-                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3366FF")));
-                break;
-            case "red":
-                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6666")));
-                break;
-            case "green":
-                this.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33CCgit 33")));
-                break;
-        }
+        Utils.applyHeaderColor(this, header_option);
     }
 
     @Override
@@ -197,10 +151,8 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         checkConfig();
         createNotifChannel();
-        checkOrRequestPerm(this, this, Manifest.permission.RECEIVE_SMS, () -> {
-            return null;
-        }, () -> {
-            Toast.makeText(this, getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
+        checkOrRequestPerm(this, this, Manifest.permission.RECEIVE_SMS, () -> null, () -> {
+            Toast.makeText(this, getString(R.string.no_access_to_send_sms), Toast.LENGTH_LONG).show();
             return null;
         });
 

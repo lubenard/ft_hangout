@@ -38,6 +38,8 @@ public class MessageFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Bundle bundle = this.getArguments();
         contactId = bundle.getInt("contactId", -1);
 
@@ -51,14 +53,11 @@ public class MessageFragment extends Fragment {
         }
 
         EditText messageContent = view.findViewById(R.id.editTextMessageContent);
-
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ImageButton sendMessage = view.findViewById(R.id.sendMessageImageButton);
+        listView = view.findViewById(R.id.message_list);
 
         dataModels = new ArrayList<>();
 
-        listView = view.findViewById(R.id.message_list);
-
-        ImageButton sendMessage = view.findViewById(R.id.sendMessageImageButton);
         sendMessage.setOnClickListener(view1 -> MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(contactDetails.get(0), null, messageContent.getText().toString(), null, null);

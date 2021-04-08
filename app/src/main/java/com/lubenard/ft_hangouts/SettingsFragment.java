@@ -57,90 +57,40 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         // Language change listener
         final Preference language = findPreference("ui_language");
-        language.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d(TAG, "Language value has changed for " + newValue);
-                switch (newValue.toString()) {
-                    case "en":
-                        Utils.setAppLocale(getContext(),"en-us");
-                        break;
-                    case "fr":
-                        Utils.setAppLocale(getContext(), "fr");
-                        break;
-                    case "system":
-                        Utils.setAppLocale(getContext(), Resources.getSystem().getConfiguration().locale.getLanguage());
-                        break;
-                }
-                restartActivity();
-                return true;
-            }
+        language.setOnPreferenceChangeListener((preference, newValue) -> {
+            Log.d(TAG, "Language value has changed for " + newValue);
+            Utils.applyLanguage(getContext(), newValue.toString());
+            restartActivity();
+            return true;
         });
 
         // Theme change listener
         final Preference theme = findPreference("ui_theme");
-        theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d(TAG, "Theme value has changed for " + newValue);
-                switch (newValue.toString()) {
-                    case "dark":
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        break;
-                    case "white":
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                        break;
-                    case "battery_saver":
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                        break;
-                    case "system":
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                        break;
-                }
-                return true;
-            }
+        theme.setOnPreferenceChangeListener((preference, newValue) -> {
+            Log.d(TAG, "Theme value has changed for " + newValue);
+            Utils.applyTheme(newValue.toString());
+            return true;
         });
 
         // Theme change listener
         final Preference headerColor = findPreference("ui_header_color");
-        headerColor.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                Log.d(TAG, "Theme value has changed for " + newValue);
-                switch (newValue.toString()) {
-                    case "default":
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6200EE")));
-                        break;
-                    case "black":
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#000000")));
-                        break;
-                    case "blue":
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3366FF")));
-                        break;
-                    case "red":
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#FF6666")));
-                        break;
-                    case "green":
-                        ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#33CCgit 33")));
-                        break;
-                }
-                return true;
-            }
+        headerColor.setOnPreferenceChangeListener((preference, newValue) -> {
+            Log.d(TAG, "Theme value has changed for " + newValue);
+            Utils.applyHeaderColor(getActivity(), newValue.toString());
+            return true;
         });
 
         // feedback preference click listener
         Preference integrate_system_contacts = findPreference("tweaks_integrate_system_contacts");
-        integrate_system_contacts.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.READ_CONTACTS, () -> {
-                    integrateSystemContacts();
-                    return true;
-                }, () -> {
-                    Toast.makeText(getContext(), "This app need to be able to read your contact to be able to import them", Toast.LENGTH_LONG).show();
-                    return false;
-                });
+        integrate_system_contacts.setOnPreferenceClickListener(preference -> {
+            MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.READ_CONTACTS, () -> {
+                integrateSystemContacts();
                 return true;
-            }
+            }, () -> {
+                Toast.makeText(getContext(), "This app need to be able to read your contact to be able to import them", Toast.LENGTH_LONG).show();
+                return false;
+            });
+            return true;
         });
 
         // feedback preference click listener

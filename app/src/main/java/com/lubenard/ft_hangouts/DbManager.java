@@ -204,12 +204,6 @@ public class DbManager extends SQLiteOpenHelper {
         int u = writableDB.update(contactsTable, cv, contactsTableId + "=?", new String[]{String.valueOf(id)});
         if (u == 0) {
             Log.d(TAG, "updateContact: update does not seems to work, insert data: (for id=" + id);
-            cv.put(contactsTableName, name);
-            cv.put(contactsTablePhoneNumber, phoneNumber);
-            cv.put(contactsTableEmail, email);
-            cv.put(contactsTableAddress, address);
-            cv.put(contactsTableBirthdate, birthday);
-            cv.put(contactsTableIconPath, iconPath);
             writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
         }
     }
@@ -219,8 +213,7 @@ public class DbManager extends SQLiteOpenHelper {
         cv.put(contactsTableIsFavourite, Integer.parseInt(newStatus));
         int u = writableDB.update(contactsTable, cv, contactsTableId + "=?", new String[]{String.valueOf(id)});
         if (u == 0) {
-            Log.d(TAG, "updateContact: update does not seems to work, insert data: (for id=" + id);
-            cv.put(contactsTableIsFavourite, Integer.parseInt(newStatus));
+            Log.d(TAG, "updateContactIsFavourite: update does not seems to work, insert data: (for id=" + id);
             writableDB.insertWithOnConflict(contactsTable, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
         }
     }

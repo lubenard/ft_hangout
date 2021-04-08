@@ -53,9 +53,6 @@ public class MainFragment extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(view13 -> createNewContact());
-
         listView = view.findViewById(R.id.main_list);
 
         dataModels = new ArrayList<>();
@@ -67,6 +64,9 @@ public class MainFragment extends Fragment {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         fragmentManager = getActivity().getSupportFragmentManager();
+
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(view13 -> createNewContact());
 
         listView.setOnItemClickListener((adapterView, view1, i, l) -> {
             ContactModel dataModel = dataModels.get(i);
