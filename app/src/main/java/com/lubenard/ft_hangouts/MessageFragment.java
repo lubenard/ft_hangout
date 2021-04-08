@@ -1,9 +1,16 @@
 package com.lubenard.ft_hangouts;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -11,26 +18,32 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class MessageFragment extends Fragment {
 
-    private int contactId;
-    private DbManager dbManager;
+    private static int contactId;
+    private static DbManager dbManager;
 
-    private ArrayList<MessageModel> dataModels;
-    private CustomMessageListAdapter adapter;
-    private ListView listView;
+    private static ArrayList<MessageModel> dataModels;
+    private static CustomMessageListAdapter adapter;
+    private static ListView listView;
     private ArrayList<String> contactDetails;
+
+    private static Boolean isUserOnMessageFragment = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.message_fragment, container, false);
     }
 
@@ -64,7 +77,7 @@ public class MessageFragment extends Fragment {
             Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
             dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
             messageContent.setText("");
-            updateMessageList();
+            updateMessageList(getContext());
             return null;
         }, () -> {
             Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
@@ -72,19 +85,52 @@ public class MessageFragment extends Fragment {
         }));
     }
 
+    public static boolean getIsUserOnMessageFragment() {
+        return isUserOnMessageFragment;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        updateMessageList();
+        isUserOnMessageFragment = true;
+        updateMessageList(getContext());
     }
 
-    private void updateMessageList() {
+    @Override
+    public void onPause() {
+        super.onPause();
+        isUserOnMessageFragment = false;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_message_contact, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_call_contact:
+                if (Utils.checkExistantPhoneNumnber(contactDetails.get(1))) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
+                    getContext().startActivity(intent);
+                } else
+                    Toast.makeText(getContext(), R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static void updateMessageList(Context context) {
         dataModels.clear();
         LinkedHashMap<Integer, MessageModel> contactsdatas = dbManager.getAllMessageFromContactId(contactId);
         for (LinkedHashMap.Entry<Integer, MessageModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
         }
-        adapter = new CustomMessageListAdapter(dataModels, getContext());
+        adapter = new CustomMessageListAdapter(dataModels, context);
         listView.setAdapter(adapter);
     }
 }

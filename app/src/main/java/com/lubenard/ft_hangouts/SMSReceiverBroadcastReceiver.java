@@ -44,6 +44,9 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
 
                 dbManager.saveNewMessage(dbManager.getContactIdFromPhoneNumber(messages[i].getOriginatingAddress()), messages[i].getMessageBody(),"FROM");
                 sendNotificationWithQuickAnswer(context, (contactName == null) ? messages[i].getOriginatingAddress() : contactName, messages[i].getMessageBody(), R.drawable.baseline_chat_black_48);
+                if (MessageFragment.getIsUserOnMessageFragment()) {
+                    MessageFragment.updateMessageList(context);
+                }
             }
         }
     }
