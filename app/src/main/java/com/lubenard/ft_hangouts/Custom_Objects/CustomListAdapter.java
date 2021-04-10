@@ -67,22 +67,30 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> {
             viewHolder.contactName.setText(dataModel.getName());
 
             // If no phoneNumber is supplied, print the email, else show a text saying the contact is empty
-            if (!dataModel.getPhoneNumber().isEmpty())
+            if (!dataModel.getPhoneNumber().isEmpty()) {
                 viewHolder.contactPhoneNumberEmail.setText(dataModel.getPhoneNumber());
-            else if (!dataModel.getEmail().isEmpty())
+                viewHolder.callButton.setOnClickListener(view -> {
+                    Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
+                        getContext().startActivity(intent);
+                });
+            } else if (!dataModel.getEmail().isEmpty()) {
                 viewHolder.contactPhoneNumberEmail.setText(dataModel.getEmail());
-            else
+                viewHolder.callButton.setImageResource(R.drawable.outline_email_24);
+                viewHolder.callButton.setOnClickListener(view -> {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto", dataModel.getEmail(), null));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, getContext().getString(R.string.contact_app));
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                    getContext().startActivity(Intent.createChooser(emailIntent, getContext().getString(R.string.send_mail)));
+                });
+            } else {
                 viewHolder.contactPhoneNumberEmail.setText(getContext().getString(R.string.no_info_provided));
-
-            viewHolder.callButton.setOnClickListener(view -> {
-                Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
-                if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
-                    getContext().startActivity(intent);
-                } else
+                viewHolder.callButton.setOnClickListener(view -> {
                     Toast.makeText(mContext, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
-            });
+                });
+            }
 
             viewHolder.messageButton.setOnClickListener(view -> {
                 Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
