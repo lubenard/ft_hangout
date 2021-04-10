@@ -145,6 +145,21 @@ public class ContactDetails extends Fragment {
                         .setNegativeButton(android.R.string.no, null)
                         .setIcon(android.R.drawable.ic_dialog_alert).show();
                 return true;
+            case R.id.action_share_contact:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+
+                String ContactDatas = "";
+                ContactDatas += (contactDetails.get(0) != null && !contactDetails.get(0).equals("")) ? "Name: " + contactDetails.get(0) + "\n" : "";
+                ContactDatas += (contactDetails.get(1) != null && !contactDetails.get(1).equals("")) ? "Phone number: " + contactDetails.get(1)  + "\n" : "";
+                ContactDatas += (contactDetails.get(2) != null && !contactDetails.get(2).equals("")) ? "Email: " + contactDetails.get(2)  + "\n" : "";
+
+                sendIntent.putExtra(Intent.EXTRA_TEXT, ContactDatas);
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -88,7 +88,7 @@ public class MessageFragment extends Fragment {
                 if (!messageContent.getText().equals("")) {
                     MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
                         SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(contactDetails.get(0), null, messageContent.getText().toString(), null, null);
+                        smsManager.sendTextMessage(contactDetails.get(1), null, messageContent.getText().toString(), null, null);
                         Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
                         dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
                         messageContent.setText("");
@@ -125,7 +125,7 @@ public class MessageFragment extends Fragment {
                 calendar.set(Calendar.MINUTE, minute);
                 Intent intent = new Intent(getContext(), ProgrammedMessage.class);
                 intent.putExtra("contactId", contactId);
-                intent.putExtra("receiverNum", contactDetails.get(0));
+                intent.putExtra("receiverNum", contactDetails.get(1));
                 intent.putExtra("message", messageContent.getText().toString());
                 messageContent.setText("");
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
