@@ -1,4 +1,4 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.UI;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,13 +6,11 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,9 +25,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.lubenard.ft_hangouts.Custom_Objects.CustomMessageListAdapter;
+import com.lubenard.ft_hangouts.DbManager;
+import com.lubenard.ft_hangouts.MainActivity;
+import com.lubenard.ft_hangouts.Custom_Objects.MessageModel;
+import com.lubenard.ft_hangouts.BroadcastReceiver.ProgrammedMessage;
+import com.lubenard.ft_hangouts.R;
 import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.Custom_Objects;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.lubenard.ft_hangouts.UI.MessageFragment;
+import com.lubenard.ft_hangouts.R;
 import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.util.ArrayList;

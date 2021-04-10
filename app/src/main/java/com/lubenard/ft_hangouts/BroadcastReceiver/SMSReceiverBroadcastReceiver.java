@@ -1,4 +1,4 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.BroadcastReceiver;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +13,10 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
+
+import com.lubenard.ft_hangouts.DbManager;
+import com.lubenard.ft_hangouts.R;
+import com.lubenard.ft_hangouts.UI.MessageFragment;
 
 public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
     @Override

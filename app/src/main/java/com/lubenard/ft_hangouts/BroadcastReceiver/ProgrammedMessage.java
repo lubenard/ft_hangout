@@ -1,10 +1,14 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.BroadcastReceiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
 import android.widget.Toast;
+
+import com.lubenard.ft_hangouts.DbManager;
+import com.lubenard.ft_hangouts.R;
+import com.lubenard.ft_hangouts.UI.MessageFragment;
 
 public class ProgrammedMessage extends BroadcastReceiver {
 

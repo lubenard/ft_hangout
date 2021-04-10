@@ -1,4 +1,4 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.Custom_Objects;
 
 public class MessageModel {
     private long id;

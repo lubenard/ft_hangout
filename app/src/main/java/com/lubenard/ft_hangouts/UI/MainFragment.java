@@ -1,12 +1,14 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.UI;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.lubenard.ft_hangouts.Custom_Objects.ContactModel;
+import com.lubenard.ft_hangouts.Custom_Objects.CustomListAdapter;
+import com.lubenard.ft_hangouts.DbManager;
+import com.lubenard.ft_hangouts.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +28,6 @@ import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 

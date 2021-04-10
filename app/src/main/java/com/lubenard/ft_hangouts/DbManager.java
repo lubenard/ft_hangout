@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.lubenard.ft_hangouts.Custom_Objects.ContactModel;
+import com.lubenard.ft_hangouts.Custom_Objects.MessageModel;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 /**

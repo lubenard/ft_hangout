@@ -1,4 +1,4 @@
-package com.lubenard.ft_hangouts;
+package com.lubenard.ft_hangouts.UI;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,6 +29,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.Preference;
 
+import com.lubenard.ft_hangouts.DbManager;
+import com.lubenard.ft_hangouts.MainActivity;
+import com.lubenard.ft_hangouts.R;
 import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.io.FileNotFoundException;
