@@ -1,12 +1,18 @@
 package com.lubenard.ft_hangouts;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +33,7 @@ import androidx.fragment.app.Fragment;
 import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 
 public class MessageFragment extends Fragment {
@@ -71,18 +79,65 @@ public class MessageFragment extends Fragment {
 
         dataModels = new ArrayList<>();
 
-        sendMessage.setOnClickListener(view1 -> MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(contactDetails.get(0), null, messageContent.getText().toString(), null, null);
-            Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
-            dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
-            messageContent.setText("");
-            updateMessageList(getContext());
-            return null;
-        }, () -> {
-            Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
-            return null;
-        }));
+        sendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!messageContent.getText().equals("")) {
+                    MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(contactDetails.get(0), null, messageContent.getText().toString(), null, null);
+                        Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
+                        dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
+                        messageContent.setText("");
+                        updateMessageList(getContext());
+                        return null;
+                    }, () -> {
+                        Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
+                        return null;
+                    });
+                }
+            }
+        });
+
+        sendMessage.setOnLongClickListener(view1 -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.send_programmed_message);
+            final View customLayout = getLayoutInflater().inflate(R.layout.programmed_message_time_picker, null);
+            final TimePicker timePicker = customLayout.findViewById(R.id.daily_reminder_timePicker);
+            timePicker.setIs24HourView(true);
+            builder.setView(customLayout);
+            builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                int hour, minute;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    hour = timePicker.getHour();
+                    minute = timePicker.getMinute();
+                }
+                else {
+                    hour = timePicker.getCurrentHour();
+                    minute = timePicker.getCurrentMinute();
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, hour);
+                calendar.set(Calendar.MINUTE, minute);
+                Intent intent = new Intent(getContext(), ProgrammedMessage.class);
+                intent.putExtra("contactId", contactId);
+                intent.putExtra("receiverNum", contactDetails.get(0));
+                intent.putExtra("message", messageContent.getText().toString());
+                messageContent.setText("");
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
+                AlarmManager am = (AlarmManager)getContext().getSystemService(Activity.ALARM_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                    am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                Toast.makeText(getContext(), "Your message will be delivered at: " + hour + "h" + minute + "mn", Toast.LENGTH_SHORT).show();
+            });
+            builder.setNegativeButton(android.R.string.cancel,null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            return false;
+        });
     }
 
     public static boolean getIsUserOnMessageFragment() {
