@@ -118,6 +118,15 @@ public class Utils {
         }
     }
 
+    public static void deleteInternalFile(String path) {
+        if (path != null && !path.isEmpty()) {
+            File fileToDelete = new File(path);
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
+            }
+        }
+    }
+
     /**
      * Change language
      * @param context

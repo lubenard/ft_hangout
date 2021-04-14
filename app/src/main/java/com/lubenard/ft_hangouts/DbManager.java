@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.lubenard.ft_hangouts.Custom_Objects.ContactModel;
 import com.lubenard.ft_hangouts.Custom_Objects.MessageModel;
+import com.lubenard.ft_hangouts.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -106,10 +107,21 @@ public class DbManager extends SQLiteOpenHelper {
      * Delete a contact
      * @param contactId the id of the contact we want to delete
      */
-    public void deleteContact(int contactId)
+    public void deleteContact(int contactId, boolean deleteAllAdatas)
     {
-        if (contactId > 0)
-            writableDB.delete(contactsTable,contactsTableId + "=?", new String[]{String.valueOf(contactId)});
+        if (contactId > 0) {
+            if (deleteAllAdatas) {
+                // Also delete related imagePic if existant
+                Cursor cursor = readableDB.query(contactsTable, new String[]{contactsTableIconPath},contactsTableId + "=?",
+                        new String[]{String.valueOf(contactId)}, null, null, null);
+                cursor.moveToFirst();
+                Utils.deleteInternalFile(cursor.getString(cursor.getColumnIndex(contactsTableIconPath)));
+                // Delete all related messages
+                writableDB.delete(messagesTable, messageTableContactId + "=?", new String[]{String.valueOf(contactId)});
+                cursor.close();
+            }
+            writableDB.delete(contactsTable, contactsTableId + "=?", new String[]{String.valueOf(contactId)});
+        }
     }
 
     /**

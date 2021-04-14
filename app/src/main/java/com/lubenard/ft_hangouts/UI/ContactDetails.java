@@ -140,7 +140,7 @@ public class ContactDetails extends Fragment {
                 new AlertDialog.Builder(context).setTitle(R.string.alertdialog_delete_contact_title)
                         .setMessage(R.string.alertdialog_delete_contact_body)
                         .setPositiveButton(android.R.string.yes, (dialog, which) -> {
-                            dbManager.deleteContact(contactId);
+                            dbManager.deleteContact(contactId, true);
                             fragmentManager.popBackStackImmediate();
                         })
                         .setNegativeButton(android.R.string.no, null)
