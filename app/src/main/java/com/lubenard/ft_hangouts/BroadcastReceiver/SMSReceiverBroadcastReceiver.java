@@ -19,10 +19,9 @@ import com.lubenard.ft_hangouts.R;
 import com.lubenard.ft_hangouts.UI.MessageFragment;
 
 public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("SMSReceiver", "Message received !");
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         Bundle myBundle = intent.getExtras();

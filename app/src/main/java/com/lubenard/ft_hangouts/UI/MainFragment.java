@@ -73,7 +73,6 @@ public class MainFragment extends Fragment {
 
         listView.setOnItemClickListener((adapterView, view1, i, l) -> {
             ContactModel dataModel = dataModels.get(i);
-            Log.d("ONCLICK", "Element " + dataModel.getId());
             ContactDetails fragment = new ContactDetails();
             Bundle args = new Bundle();
             args.putInt("contactId", dataModel.getId());
@@ -129,7 +128,6 @@ public class MainFragment extends Fragment {
                         sorting_value += 1;
                     if (system_contacts.isChecked())
                         sorting_value += 2;
-                    Log.d("MainFragment", "Sorting value is " + sorting_value);
                     sharedPreferences.edit().putInt("sort_filter_value", sorting_value).apply();
                     sharedPreferences.edit().putBoolean("sort_filter_system_contacts", system_contacts.isChecked()).apply();
                     sharedPreferences.edit().putBoolean("sort_filter_internal_contacts", internal_contacts.isChecked()).apply();

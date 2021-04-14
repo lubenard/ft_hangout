@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.lubenard.ft_hangouts.Custom_Objects.ContactModel;
 import com.lubenard.ft_hangouts.DbManager;
 import com.lubenard.ft_hangouts.MainActivity;
 import com.lubenard.ft_hangouts.R;
@@ -85,13 +86,13 @@ public class EditContact extends Fragment {
             activity.setTitle(R.string.app_create_contact_name);
         else {
             activity.setTitle(R.string.app_edit_contact_name);
-            ArrayList<String> contactDetails = dbManager.getContactDetail(contactId);
+            ContactModel contactDetails = dbManager.getContactDetail(contactId);
             // Load datas into the fields
-            personName.setText(contactDetails.get(0));
-            phone.setText(contactDetails.get(1));
-            emailAddress.setText(contactDetails.get(2));
-            postalAddress.setText(contactDetails.get(3));
-            birthdayDate.setText(contactDetails.get(4));
+            personName.setText(contactDetails.getName());
+            phone.setText(contactDetails.getPhoneNumber());
+            emailAddress.setText(contactDetails.getEmail());
+            postalAddress.setText(contactDetails.getAddress());
+            birthdayDate.setText(contactDetails.getBirthday());
         }
 
         imagePicker.setOnClickListener(view1 -> {
@@ -158,7 +159,6 @@ public class EditContact extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         String filename;
         if (resultCode == RESULT_OK && data != null && data.getData() == null) {
-            Log.d("EditContact", "Pic took from camera");
             Bitmap photo = (Bitmap) data.getExtras().get("data");
 
             filename = new SimpleDateFormat("/dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".jpg";
@@ -175,11 +175,9 @@ public class EditContact extends Fragment {
             imagePicker.setImageBitmap(photo);
         }
         if (resultCode  == RESULT_OK && data != null && data.getData() != null) {
-            Log.d("EditContact", "Pic took from files");
             filename = new SimpleDateFormat("/dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".jpg";
 
             Uri selectedImageUri = data.getData();
-            Log.d("EditContact", "file path = " + context.getFilesDir().getAbsolutePath() + filename);
 
             iconImage = context.getFilesDir().getAbsolutePath() + filename;
 

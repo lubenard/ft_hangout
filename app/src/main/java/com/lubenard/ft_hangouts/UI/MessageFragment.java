@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.lubenard.ft_hangouts.Custom_Objects.ContactModel;
 import com.lubenard.ft_hangouts.Custom_Objects.CustomMessageListAdapter;
 import com.lubenard.ft_hangouts.DbManager;
 import com.lubenard.ft_hangouts.MainActivity;
@@ -47,7 +48,7 @@ public class MessageFragment extends Fragment {
     private static ArrayList<MessageModel> dataModels;
     private static CustomMessageListAdapter adapter;
     private static ListView listView;
-    private ArrayList<String> contactDetails;
+    private ContactModel contactDetails;
 
     private static Boolean isUserOnMessageFragment = false;
 
@@ -73,7 +74,7 @@ public class MessageFragment extends Fragment {
             getActivity().setTitle(R.string.message_new_contact_title);
         else {
             contactDetails = dbManager.getContactDetail(contactId);
-            getActivity().setTitle(contactDetails.get(0));
+            getActivity().setTitle(contactDetails.getName());
         }
 
         EditText messageContent = view.findViewById(R.id.editTextMessageContent);
@@ -82,23 +83,20 @@ public class MessageFragment extends Fragment {
 
         dataModels = new ArrayList<>();
 
-        sendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!messageContent.getText().equals("")) {
-                    MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
-                        SmsManager smsManager = SmsManager.getDefault();
-                        smsManager.sendTextMessage(contactDetails.get(1), null, messageContent.getText().toString(), null, null);
-                        Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
-                        dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
-                        messageContent.setText("");
-                        updateMessageList(getContext());
-                        return null;
-                    }, () -> {
-                        Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
-                        return null;
-                    });
-                }
+        sendMessage.setOnClickListener(view12 -> {
+            if (!messageContent.getText().equals("")) {
+                MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(contactDetails.getPhoneNumber(), null, messageContent.getText().toString(), null, null);
+                    Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
+                    dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
+                    messageContent.setText("");
+                    updateMessageList(getContext());
+                    return null;
+                }, () -> {
+                    Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
+                    return null;
+                });
             }
         });
 
@@ -125,7 +123,7 @@ public class MessageFragment extends Fragment {
                 calendar.set(Calendar.MINUTE, minute);
                 Intent intent = new Intent(getContext(), ProgrammedMessage.class);
                 intent.putExtra("contactId", contactId);
-                intent.putExtra("receiverNum", contactDetails.get(1));
+                intent.putExtra("receiverNum", contactDetails.getPhoneNumber());
                 intent.putExtra("message", messageContent.getText().toString());
                 messageContent.setText("");
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, 0);
@@ -134,7 +132,7 @@ public class MessageFragment extends Fragment {
                     am.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                 else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                Toast.makeText(getContext(), "Your message will be delivered at: " + hour + "h" + minute + "mn", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.message_delivered_at) + hour + "h" + minute + "mn", Toast.LENGTH_SHORT).show();
             });
             builder.setNegativeButton(android.R.string.cancel,null);
             AlertDialog dialog = builder.create();
@@ -171,9 +169,9 @@ public class MessageFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_call_contact:
-                if (Utils.checkExistantPhoneNumnber(contactDetails.get(1))) {
+                if (Utils.checkExistantPhoneNumnber(contactDetails.getPhoneNumber())) {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
+                    intent.setData(Uri.parse("tel:" + contactDetails.getPhoneNumber()));
                     getContext().startActivity(intent);
                 } else
                     Toast.makeText(getContext(), R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();

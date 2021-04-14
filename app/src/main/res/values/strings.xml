@@ -65,4 +65,5 @@
     <string name="cannot_save_contact">The contact cannot be saved. Too few informations</string>
     <string name="send_programmed_message">Send programmed message:</string>
     <string name="action_share">Share this contact</string>
+    <string name="message_delivered_at">\"Your message will be delivered at: \"</string>
 </resources>

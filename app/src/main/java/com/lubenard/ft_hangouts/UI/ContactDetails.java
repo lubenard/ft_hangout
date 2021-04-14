@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.lubenard.ft_hangouts.Custom_Objects.ContactModel;
 import com.lubenard.ft_hangouts.DbManager;
 import com.lubenard.ft_hangouts.R;
 import com.lubenard.ft_hangouts.Utils.Utils;
@@ -34,7 +35,7 @@ public class ContactDetails extends Fragment {
 
     private int contactId = -1;
     private DbManager dbManager;
-    private ArrayList<String> contactDetails;
+    private ContactModel contactDetails;
     private Context context;
     private Activity activity;
     private FragmentManager fragmentManager;
@@ -82,9 +83,9 @@ public class ContactDetails extends Fragment {
         Button messageContact = view.findViewById(R.id.details_message);
 
         callContact.setOnClickListener(view13 -> {
-            if (Utils.checkExistantPhoneNumnber(contactDetails.get(1))) {
+            if (Utils.checkExistantPhoneNumnber(contactDetails.getPhoneNumber())) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + contactDetails.get(1)));
+                intent.setData(Uri.parse("tel:" + contactDetails.getPhoneNumber()));
                 context.startActivity(intent);
             } else {
                 Toast.makeText(context, R.string.impossible_call_no_phone_number, Toast.LENGTH_LONG).show();
@@ -92,7 +93,7 @@ public class ContactDetails extends Fragment {
         });
 
         messageContact.setOnClickListener(view12 -> {
-            if (Utils.checkExistantPhoneNumnber(contactDetails.get(1))) {
+            if (Utils.checkExistantPhoneNumnber(contactDetails.getPhoneNumber())) {
                 MessageFragment fragment = new MessageFragment();
                 Bundle args = new Bundle();
                 args.putInt("contactId", contactId);
@@ -105,14 +106,14 @@ public class ContactDetails extends Fragment {
         });
 
         favButton.setOnClickListener(view1 -> {
-            if (contactDetails.get(6).equals("1")) {
+            if (contactDetails.getIsFavourite()) {
                 favButton.setBackgroundResource(R.drawable.baseline_favorite_border_24);
-                contactDetails.set(6, "0");
+                contactDetails.setIsFavourite(0);
             } else {
                 favButton.setBackgroundResource(R.drawable.baseline_favorite_24);
-                contactDetails.set(6, "1");
+                contactDetails.setIsFavourite(1);
             }
-            dbManager.updateContactIsFavourite(contactId, contactDetails.get(6));
+            dbManager.updateContactIsFavourite(contactId, (contactDetails.getIsFavourite()) ? 1 : 0);
         });
     }
 
@@ -150,9 +151,9 @@ public class ContactDetails extends Fragment {
                 sendIntent.setAction(Intent.ACTION_SEND);
 
                 String ContactDatas = "";
-                ContactDatas += (contactDetails.get(0) != null && !contactDetails.get(0).equals("")) ? "Name: " + contactDetails.get(0) + "\n" : "";
-                ContactDatas += (contactDetails.get(1) != null && !contactDetails.get(1).equals("")) ? "Phone number: " + contactDetails.get(1)  + "\n" : "";
-                ContactDatas += (contactDetails.get(2) != null && !contactDetails.get(2).equals("")) ? "Email: " + contactDetails.get(2)  + "\n" : "";
+                ContactDatas += (contactDetails.getName() != null && !contactDetails.getName().equals("")) ? "Name: " + contactDetails.getName() + "\n" : "";
+                ContactDatas += (contactDetails.getPhoneNumber() != null && !contactDetails.getPhoneNumber().equals("")) ? "Phone number: " + contactDetails.getPhoneNumber()  + "\n" : "";
+                ContactDatas += (contactDetails.getEmail() != null && !contactDetails.getEmail().equals("")) ? "Email: " + contactDetails.getEmail()  + "\n" : "";
 
                 sendIntent.putExtra(Intent.EXTRA_TEXT, ContactDatas);
                 sendIntent.setType("text/plain");
@@ -170,18 +171,18 @@ public class ContactDetails extends Fragment {
         if (contactId > 0) {
             contactDetails = dbManager.getContactDetail(contactId);
 
-            name.setText(contactDetails.get(0));
-            phoneNumber.setText(contactDetails.get(1));
-            email.setText(contactDetails.get(2));
-            address.setText(contactDetails.get(3));
-            birthday.setText(contactDetails.get(4));
+            name.setText(contactDetails.getName());
+            phoneNumber.setText(contactDetails.getPhoneNumber());
+            email.setText(contactDetails.getEmail());
+            address.setText(contactDetails.getAddress());
+            birthday.setText(contactDetails.getBirthday());
 
-            if (contactDetails.get(5) != null)
-                icon.setImageDrawable(Drawable.createFromPath(contactDetails.get(5)));
+            if (contactDetails.getContactImage() != null)
+                icon.setImageDrawable(Drawable.createFromPath(contactDetails.getContactImage()));
             else
                 icon.setImageDrawable(context.getResources().getDrawable(android.R.drawable.ic_menu_help));
 
-            favButton.setBackgroundResource(contactDetails.get(6).equals("1") ? R.drawable.baseline_favorite_24 : R.drawable.baseline_favorite_border_24);
+            favButton.setBackgroundResource(contactDetails.getIsFavourite() ? R.drawable.baseline_favorite_24 : R.drawable.baseline_favorite_border_24);
         }
         else {
             // Trigger error, show toast and exit

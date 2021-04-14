@@ -70,7 +70,6 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> {
             if (!dataModel.getPhoneNumber().isEmpty()) {
                 viewHolder.contactPhoneNumberEmail.setText(dataModel.getPhoneNumber());
                 viewHolder.callButton.setOnClickListener(view -> {
-                    Log.d("ONCLICK", "Oncall has been clicked for item " + dataModel.getName());
                         Intent intent = new Intent(Intent.ACTION_DIAL);
                         intent.setData(Uri.parse("tel:" + dataModel.getPhoneNumber()));
                         getContext().startActivity(intent);
@@ -93,7 +92,6 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> {
             }
 
             viewHolder.messageButton.setOnClickListener(view -> {
-                Log.d("ONCLICK", "OnMessage has been clicked for item " + dataModel.getName());
                 if (Utils.checkExistantPhoneNumnber(dataModel.getPhoneNumber())) {
                     MessageFragment fragment = new MessageFragment();
                     Bundle args = new Bundle();
