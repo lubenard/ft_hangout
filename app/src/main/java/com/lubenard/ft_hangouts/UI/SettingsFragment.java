@@ -108,6 +108,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
+    /**
+     * Integrate the system contact by questionning the android API
+     */
     private void integrateSystemContacts() {
         String contactName;
         String phoneNumber;
@@ -162,6 +165,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Toast.makeText(getContext(), getContext().getString(R.string.all_system_contacts_imported), Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Restart activity
+     */
     public static void restartActivity() {
         activity.recreate();
     }

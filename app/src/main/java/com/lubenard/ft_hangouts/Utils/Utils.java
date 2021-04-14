@@ -20,6 +20,10 @@ import java.util.Locale;
 
 public class Utils {
 
+    /**
+     * Apply theme based on newValue
+     * @param newValue the new Theme to apply
+     */
     public static void applyTheme(String newValue) {
         switch (newValue) {
             case "dark":
@@ -37,6 +41,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Apply language based on newValue
+     * @param context
+     * @param newValue the new Language to apply
+     */
     public static void applyLanguage(Context context, String newValue) {
         switch (newValue) {
             case "en":
@@ -51,6 +60,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Apply header color based on newValue
+     * @param activity
+     * @param newValue the new header color to apply
+     */
     public static void applyHeaderColor(Activity activity, String newValue) {
         switch (newValue) {
             case "default":
@@ -71,6 +85,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Check if the phoneNumber is empty or not
+     * @param phoneNumber phoneNumber to check
+     * @return true if phoneNumber is not empty, else false
+     */
     public static boolean checkExistantPhoneNumnber(String phoneNumber) {
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             return true;
@@ -78,6 +97,12 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Copty a file into internal storage
+     * @param mcoContext
+     * @param sFileName name to new file
+     * @param datasUri Uri of file to copy
+     */
     // Very useful https://mkyong.com/java/how-to-write-to-file-in-java-fileoutputstream-example/
     public static void writeFileOnInternalStorage(Context mcoContext, String sFileName, Uri datasUri) {
         try {
@@ -93,6 +118,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Change language
+     * @param context
+     * @param localeCode localCode to apply
+     */
     public static final void setAppLocale(Context context, String localeCode) {
         Locale myLocale = new Locale(localeCode);
         Resources res = context.getResources();

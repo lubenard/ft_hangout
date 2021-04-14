@@ -126,8 +126,6 @@ public class EditContact extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_validate:
-                // TODO: see if with API we can insert contact into system contacts
-                // For now, just register into own contacts
                 String name = personName.getText().toString();
                 String phoneNumber = phone.getText().toString();
                 String email = emailAddress.getText().toString();

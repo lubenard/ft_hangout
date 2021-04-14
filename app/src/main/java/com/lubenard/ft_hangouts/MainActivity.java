@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set correct theme + languages at app startup
+     */
     private void checkConfig() {
         String theme_option = sharedPreferences.getString("ui_theme", "dark");
         Utils.applyTheme(theme_option);

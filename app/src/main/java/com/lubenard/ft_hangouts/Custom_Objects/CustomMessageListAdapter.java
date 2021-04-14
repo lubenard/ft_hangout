@@ -13,9 +13,6 @@ import java.util.ArrayList;
 
 public class CustomMessageListAdapter extends ArrayAdapter<MessageModel> {
 
-    private ArrayList<MessageModel> dataSet;
-    Context mContext;
-
     // View lookup cache
     private static class ViewHolder {
         TextView messageContent;
@@ -23,8 +20,6 @@ public class CustomMessageListAdapter extends ArrayAdapter<MessageModel> {
 
     public CustomMessageListAdapter(ArrayList<MessageModel> data, Context context) {
         super(context, R.layout.custom_contact_list_element, data);
-        this.dataSet = data;
-        this.mContext = context;
     }
 
     @Override

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class CustomListAdapter extends ArrayAdapter<ContactModel> {
 
-    private ArrayList<ContactModel> dataSet;
     private Context mContext;
     private FragmentActivity activity;
 
@@ -40,7 +39,6 @@ public class CustomListAdapter extends ArrayAdapter<ContactModel> {
 
     public CustomListAdapter(ArrayList<ContactModel> data, Context context, FragmentActivity activity) {
         super(context, R.layout.custom_contact_list_element, data);
-        this.dataSet = data;
         this.mContext = context;
         this.activity = activity;
     }

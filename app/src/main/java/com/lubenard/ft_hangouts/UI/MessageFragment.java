@@ -180,6 +180,10 @@ public class MessageFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Update the message list
+     * @param context
+     */
     public static void updateMessageList(Context context) {
         dataModels.clear();
         LinkedHashMap<Integer, MessageModel> contactsdatas = dbManager.getAllMessageFromContactId(contactId);

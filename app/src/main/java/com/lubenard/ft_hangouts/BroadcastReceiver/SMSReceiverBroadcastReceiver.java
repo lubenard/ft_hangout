@@ -46,7 +46,7 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
                 }
 
                 dbManager.saveNewMessage(dbManager.getContactIdFromPhoneNumber(messages[i].getOriginatingAddress()), messages[i].getMessageBody(),"FROM");
-                sendNotificationWithQuickAnswer(context, (contactName == null) ? messages[i].getOriginatingAddress() : contactName, messages[i].getMessageBody(), R.drawable.baseline_chat_black_48);
+                sendNotification(context, (contactName == null) ? messages[i].getOriginatingAddress() : contactName, messages[i].getMessageBody(), R.drawable.baseline_chat_black_48);
                 if (MessageFragment.getIsUserOnMessageFragment()) {
                     MessageFragment.updateMessageList(context);
                 }
@@ -54,7 +54,14 @@ public class SMSReceiverBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    public static void sendNotificationWithQuickAnswer(Context context, String title, String content, int drawable) {
+    /**
+     * Send a notification when user receive a message
+     * @param context
+     * @param title Title of the notification
+     * @param content body of the notification
+     * @param drawable icon of the notification
+     */
+    public static void sendNotification(Context context, String title, String content, int drawable) {
         // Get the notification manager and build it
         PendingIntent pi = PendingIntent.getActivity(context, 1, new Intent(context, MessageFragment.class), PendingIntent.FLAG_UPDATE_CURRENT);
 

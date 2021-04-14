@@ -141,6 +141,9 @@ public class MainFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Update the contact list
+     */
     private void updateContactList() {
         dataModels.clear();
         LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList(sorting_value);
@@ -151,7 +154,9 @@ public class MainFragment extends Fragment {
         listView.setAdapter(adapter);
     }
 
-    // Start the EditContact activity, with no user datas to load
+    /**
+     * Start the EditContact activity, with no user datas to load
+     */
     private void createNewContact() {
         EditContact fragment = new EditContact();
         Bundle args = new Bundle();
