@@ -60,4 +60,9 @@
     <string name="all_system_contacts_imported">Tous les contacts du systeme ont été importés</string>
     <string name="contact_app">Application de contacts</string>
     <string name="send_mail">Envoyer un mail...</string>
+    <string name="impossible_message_no_phone_number">Impossible d\'nevoyer un message au contact. Aucun numéro de téléphone n\'a été sauvegardé.</string>
+    <string name="cannot_save_contact">Ce contact ne peut être sauvegardé. Trop peu d\'informations</string>
+    <string name="send_programmed_message">Envoyer un message programmé :</string>
+    <string name="action_share">Partager ce contact</string>
+    <string name="message_delivered_at">Votre message sera livré a :</string>
 </resources>

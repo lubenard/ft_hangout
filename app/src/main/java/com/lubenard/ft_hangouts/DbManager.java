@@ -107,10 +107,10 @@ public class DbManager extends SQLiteOpenHelper {
      * Delete a contact
      * @param contactId the id of the contact we want to delete
      */
-    public void deleteContact(int contactId, boolean deleteAllAdatas)
+    public void deleteContact(int contactId, boolean deleteAllDatas)
     {
         if (contactId > 0) {
-            if (deleteAllAdatas) {
+            if (deleteAllDatas) {
                 // Also delete related imagePic if existant
                 Cursor cursor = readableDB.query(contactsTable, new String[]{contactsTableIconPath},contactsTableId + "=?",
                         new String[]{String.valueOf(contactId)}, null, null, null);
