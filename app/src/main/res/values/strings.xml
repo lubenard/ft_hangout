@@ -10,7 +10,6 @@
 
     <string name="settings_ui_theme_clear">Clear</string>
     <string name="settings_ui_theme_dark">Dark</string>
-    <string name="settings_ui_theme_black">Black</string>
     <string name="settings_ui_theme_battery_saver">Battery saver</string>
     <string name="settings_ui_system">System</string>
     <string name="ui_language_title">Language</string>

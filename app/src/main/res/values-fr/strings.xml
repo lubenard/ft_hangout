@@ -9,7 +9,6 @@
 
     <string name="settings_ui_theme_clear">Clair</string>
     <string name="settings_ui_theme_dark">Sombre</string>
-    <string name="settings_ui_theme_black">Noir</string>
     <string name="settings_ui_system">Système</string>
     <string name="ui_language_title">Langage</string>
     <string name="ui_theme_title">Thème</string>
