@@ -64,4 +64,5 @@
     <string name="send_programmed_message">Envoyer un message programmé :</string>
     <string name="action_share">Partager ce contact</string>
     <string name="message_delivered_at">Votre message sera livré a :</string>
+    <string name="edit_contact_address_hint">100 rue du bonheur</string>
 </resources>

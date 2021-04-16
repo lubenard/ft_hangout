@@ -65,4 +65,5 @@
     <string name="send_programmed_message">Send programmed message:</string>
     <string name="action_share">Share this contact</string>
     <string name="message_delivered_at">Your message will be delivered at:</string>
+    <string name="edit_contact_address_hint">100 street of hapiness</string>
 </resources>
