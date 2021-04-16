@@ -68,6 +68,12 @@ public class MainFragment extends Fragment {
 
         fragmentManager = getActivity().getSupportFragmentManager();
 
+        sorting_value = 0;
+        if (sharedPreferences.getBoolean("sort_filter_internal_contacts", true))
+            sorting_value += 1;
+        if (sharedPreferences.getBoolean("sort_filter_system_contacts", true))
+            sorting_value += 2;
+
         ImageButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(view13 -> createNewContact());
 
@@ -146,6 +152,7 @@ public class MainFragment extends Fragment {
      */
     private void updateContactList() {
         dataModels.clear();
+        Log.d("MainFragment", "Sorting value is " + sorting_value);
         LinkedHashMap<Integer, ContactModel> contactsdatas = dbManager.getAllContactsForMainList(sorting_value);
         for (LinkedHashMap.Entry<Integer, ContactModel> oneElemDatas : contactsdatas.entrySet()) {
             dataModels.add(oneElemDatas.getValue());
