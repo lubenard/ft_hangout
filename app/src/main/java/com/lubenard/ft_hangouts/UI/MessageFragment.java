@@ -49,6 +49,7 @@ public class MessageFragment extends Fragment {
     private static CustomMessageListAdapter adapter;
     private static ListView listView;
     private ContactModel contactDetails;
+    private boolean hasAuthToSensSms = false;
 
     private static Boolean isUserOnMessageFragment = false;
 
@@ -85,18 +86,15 @@ public class MessageFragment extends Fragment {
 
         sendMessage.setOnClickListener(view12 -> {
             if (!messageContent.getText().equals("")) {
-                MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
+                if (hasAuthToSensSms) {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(contactDetails.getPhoneNumber(), null, messageContent.getText().toString(), null, null);
-                    Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.toast_sms_sent, Toast.LENGTH_SHORT).show();
                     dbManager.saveNewMessage(contactId, messageContent.getText().toString(), "TO");
                     messageContent.setText("");
                     updateMessageList(getContext());
-                    return null;
-                }, () -> {
+                } else
                     Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
-                    return null;
-                });
             }
         });
 
@@ -149,6 +147,14 @@ public class MessageFragment extends Fragment {
     public void onResume() {
         super.onResume();
         isUserOnMessageFragment = true;
+        MainActivity.checkOrRequestPerm(getActivity(), getContext(), Manifest.permission.SEND_SMS, () -> {
+            hasAuthToSensSms = true;
+            return true;
+        }, () -> {
+            hasAuthToSensSms = false;
+            Toast.makeText(getContext(), getContext().getString(R.string.no_access_to_send_sms), Toast.LENGTH_SHORT).show();
+            return null;
+        });
         updateMessageList(getContext());
     }
 
