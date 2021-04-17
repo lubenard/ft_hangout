@@ -2,6 +2,8 @@
 
 ft_hangout is an app that help you managing your contacts, and sending them sms.
 
+[Subject FR](fr.subject.pdf)
+
 It is written in java.
 
 ![Screenshot_1618688620](https://user-images.githubusercontent.com/42534397/115125159-ad041900-9fc6-11eb-89ca-628d9983e616.png)
